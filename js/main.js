@@ -215,6 +215,7 @@ window.addEventListener('load', () => {
     if (typeof buildGloss       === 'function') buildGloss();
     if (typeof initMetrics      === 'function') initMetrics();
     if (typeof initTooltips     === 'function') initTooltips();
+    if (typeof buildFigures     === 'function') buildFigures();
     if (typeof loadFlashcards   === 'function') loadFlashcards();
     if (typeof loadQA           === 'function') loadQA();
     setQuick();

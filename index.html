@@ -55,6 +55,7 @@
     <button class="nb"         data-mod="flux"        onclick="go('flux',this)">⚡ Sim: Flux</button>
     <button class="nb"         data-mod="forte"       onclick="go('forte',this)">⚡ Sim: Forțe</button>
     <button class="nb"         data-mod="eq"          onclick="go('eq',this)">∑ Ecuații</button>
+    <button class="nb"         data-mod="figuri"      onclick="go('figuri',this)">🖼️ Figuri</button>
     <button class="nb"         data-mod="pratica"     onclick="go('pratica',this)">🎓 Practică</button>
     <button class="nb"         data-mod="metrics"     onclick="go('metrics',this)">📊 Progres</button>
     <button class="nb"         data-mod="glosar"      onclick="go('glosar',this)">📖 Glosar</button>
@@ -1753,6 +1754,39 @@
       </div>
 
 
+
+      <!-- ═══════════════════════════════════════
+           MOD FIGURI
+      ═══════════════════════════════════════ -->
+      <div id="mod-figuri" class="panel">
+        <div class="sim-card">
+          <div class="sim-head">
+            <div>
+              <div class="sim-title">Figuri de Examen</div>
+              <div class="sim-sub">Fiecare figură din materialul de examen · asociată cu conceptul teoretic · PT + RO</div>
+            </div>
+            <span class="badge">30 figuri</span>
+          </div>
+          <div class="sim-body">
+            <div class="fig-filter">
+              <label>Filtrează:</label>
+              <select id="fig-chapter" onchange="filterFigures()">
+                <option value="all">Toate figurile</option>
+                <option value="legi">Cap. 1-2: Legi + Câmp</option>
+                <option value="procedee">Cap. 2-4: Procedee Energie</option>
+                <option value="perie">Cap. 5: Perie-Colector</option>
+                <option value="magneti">Cap. 6: Magneți + Reacție</option>
+                <option value="mcc">Cap. 7-11: Motor CC</option>
+                <option value="srvm">Cap. 12-14: SRVM BLDC</option>
+                <option value="async">Motor Asincron</option>
+                <option value="mpp">Cap. 15-19: Motor Pas cu Pas</option>
+              </select>
+            </div>
+            <div class="fig-grid" id="fig-grid"></div>
+          </div>
+        </div>
+      </div>
+
       <!-- ═══════════════════════════════════════
            MOD METRICS
       ═══════════════════════════════════════ -->
@@ -1847,6 +1881,7 @@
 <script src="js/tooltips.js"></script>
 <script src="js/feynman.js"></script>
 <script src="js/practice.js"></script>
+<script src="js/figures.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

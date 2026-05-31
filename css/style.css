@@ -1340,3 +1340,34 @@ input[type="range"]::-moz-range-thumb {
   .nb { scroll-snap-align:start; }
   .chat-msgs { -webkit-overflow-scrolling:touch; }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   Figuri Examen module
+══════════════════════════════════════════════════════════════ */
+.fig-filter { display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
+.fig-filter label { font-size:12px; font-weight:600; color:var(--text2); }
+.fig-filter select { border:1.5px solid var(--border); border-radius:var(--radius-sm);
+  padding:6px 12px; font-family:var(--font); font-size:12px; background:var(--bg1); }
+.fig-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:14px; }
+.fig-card { background:var(--bg1); border:1.5px solid var(--border);
+  border-radius:var(--radius); overflow:hidden; transition:all 0.2s; cursor:pointer; }
+.fig-card:hover { border-color:var(--blue2); box-shadow:0 4px 16px rgba(26,95,180,0.12); transform:translateY(-2px); }
+.fig-card.hidden { display:none; }
+.fig-num { font-size:10px; font-weight:700; color:var(--text3); letter-spacing:1px;
+  text-transform:uppercase; padding:8px 12px 0; }
+.fig-svg-wrap { padding:8px 12px; background:white; border-bottom:1px solid var(--bg2);
+  min-height:120px; display:flex; align-items:center; justify-content:center; }
+.fig-svg-wrap svg { width:100%; max-height:125px; }
+.fig-title { font-size:12px; font-weight:700; color:var(--blue); padding:8px 12px 4px; }
+.fig-desc-pt { font-size:11px; color:var(--text2); line-height:1.55;
+  margin:0 12px 4px; padding:6px 8px; background:rgba(38,162,105,0.05);
+  border-left:3px solid #26a269; border-radius:0 4px 4px 0; }
+.fig-desc-ro { font-size:11px; color:var(--text3); line-height:1.55;
+  margin:0 12px 6px; padding:6px 8px; background:rgba(26,95,180,0.04);
+  border-left:3px solid #1a5fb4; border-radius:0 4px 4px 0; }
+.fig-formula { font-size:11px; font-weight:600; color:var(--blue); background:var(--blue5);
+  border-radius:4px; margin:0 12px 8px; padding:5px 8px; }
+.fig-link { display:block; text-align:center; font-size:11px; font-weight:600;
+  color:var(--blue); padding:8px; border-top:1px solid var(--bg2); background:var(--blue5); }
+.fig-link:hover { background:var(--blue4); }
+@media (max-width:480px) { .fig-grid { grid-template-columns:1fr; } }
