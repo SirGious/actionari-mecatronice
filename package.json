@@ -1,0 +1,11 @@
+{
+  "name": "actionari-mecatronice",
+  "version": "1.0.0",
+  "description": "Simulator interactiv Acționări Sisteme Mecatronice",
+  "scripts": {
+    "dev": "npx serve .",
+    "start": "npx serve ."
+  },
+  "keywords": ["engineering", "simulator", "mechatronics"],
+  "license": "MIT"
+}

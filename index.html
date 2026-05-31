@@ -1,0 +1,1852 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Acționări Mecatronice — Simulator Interactiv</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#1a5fb4" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="ActMecat" />
+  <meta name="mobile-web-app-capable" content="yes" />
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ══════════════ HEADER ══════════════ -->
+  <header class="header">
+    <div class="logo-area">
+      <h1 class="logo">Acționări <span>Mecatronice</span></h1>
+      <p class="sub">Simulator Interactiv · Universitate Politehnică</p>
+    </div>
+    <div class="api-row">
+      <div class="dot" id="sdot"></div>
+      <input class="api-inp" type="password" id="akey" placeholder="Cheie API Anthropic (sk-ant-...)" />
+    </div>
+  </header>
+
+  <!-- ══════════════ NAV ══════════════ -->
+  <nav class="nav" id="nav">
+    <span class="nav-group">Fundamentos</span>
+    <button class="nb active" data-mod="legi"        onclick="go('legi',this)">01 · Legi Electrice</button>
+    <button class="nb"         data-mod="camp"        onclick="go('camp',this)">02 · Câmp Magnetic</button>
+    <button class="nb"         data-mod="procedee"    onclick="go('procedee',this)">03 · Procedee Energie</button>
+
+    <span class="nav-group">Motoare CC</span>
+    <button class="nb"         data-mod="perie"       onclick="go('perie',this)">05 · Perie-Colector</button>
+    <button class="nb"         data-mod="magneti"     onclick="go('magneti',this)">06 · Magneți &amp; Reacție</button>
+    <button class="nb"         data-mod="mcc"         onclick="go('mcc',this)">07 · MCC Derivație</button>
+    <button class="nb"         data-mod="mcc-serie"   onclick="go('mcc-serie',this)">08 · MCC Serie</button>
+    <button class="nb"         data-mod="transfer"    onclick="go('transfer',this)">09-10 · Transfer</button>
+    <button class="nb"         data-mod="tranzitoriu" onclick="go('tranzitoriu',this)">11 · Tranzitoriu</button>
+
+    <span class="nav-group">Motoare Speciale</span>
+    <button class="nb"         data-mod="srvm"        onclick="go('srvm',this)">12-14 · SRVM Fără Perii</button>
+    <button class="nb"         data-mod="mpp"         onclick="go('mpp',this)">15-19 · Motor Pas cu Pas</button>
+    <button class="nb"         data-mod="async"       onclick="go('async',this)">Asincron</button>
+
+    <span class="nav-group">Ferramentas</span>
+    <button class="nb"         data-mod="flux"        onclick="go('flux',this)">⚡ Sim: Flux</button>
+    <button class="nb"         data-mod="forte"       onclick="go('forte',this)">⚡ Sim: Forțe</button>
+    <button class="nb"         data-mod="eq"          onclick="go('eq',this)">∑ Ecuații</button>
+    <button class="nb"         data-mod="pratica"     onclick="go('pratica',this)">🎓 Practică</button>
+    <button class="nb"         data-mod="metrics"     onclick="go('metrics',this)">📊 Progres</button>
+    <button class="nb"         data-mod="glosar"      onclick="go('glosar',this)">📖 Glosar</button>
+  </nav>
+
+  <!-- ══════════════ MAIN GRID ══════════════ -->
+  <div class="main-grid">
+
+    <!-- ─────────── PANOURI STÂNGA ─────────── -->
+    <div class="panels-col">
+
+
+      <!-- ═══════════════════════════════════════
+           MOD LEGI (Cap. 1)
+      ═══════════════════════════════════════ -->
+      <div id="mod-legi" class="panel active">
+        <div class="sim-card">
+          <div class="sim-head">
+            <div>
+              <div class="sim-title">Legi de Bază pentru Mărimi Electrice</div>
+              <div class="sim-sub">Câmp Electric · Sarcini · Câmp Magnetic · Forța Laplace · Flux · Faraday · Circuit Magnetic</div>
+            </div>
+            <span class="badge">Cap. 1</span>
+          </div>
+          <div class="sim-body">
+            <div class="etabs">
+              <button class="etab active" onclick="etab(this,'legi-tech')">📐 Tehnic</button>
+              <button class="etab" onclick="etab(this,'legi-kid')">🧒 Super Simplu</button>
+            </div>
+            <div id="legi-tech" class="eblock show">
+              <div class="lang-sec pt"><span class="lang-badge">🇵🇹 Português — Explicação Técnica</span>
+                As leis fundamentais do eletromagnetismo governam todos os motores elétricos:<br>
+                <strong>1. Fluxo elétrico:</strong> Φ_SΓ = ∬_SΓ E⃗·n̂ dA — integral do campo E sobre uma superfície.<br>
+                <strong>2. Conservação da carga:</strong> i_SΓ = −d(qVΓ)/dt — a corrente que sai = variação de carga dentro.<br>
+                <strong>3. Inducção B:</strong> B⃗ = (μ·i)/(2π·r) × û_r para um condutor filiform reto.<br>
+                <strong>4. Força Laplace:</strong> F⃗₁₂ = i₂·l⃗ × B⃗₁₂ — força sobre condutor com corrente em campo B.<br>
+                <strong>5. Intensidade H:</strong> H⃗ = B⃗/μ — característica de magnetização independente do material.<br>
+                <strong>6. Fluxo magnético:</strong> Ψ = ∬_SΓ B⃗·dA⃗ = 0 (superfície fechada — lei de Gauss).<br>
+                <strong>7. Faraday:</strong> e_Γ = ∮_Γ E⃗·ds⃗ = −dΨ_SΓ/dt — variação de fluxo gera tensão.<br>
+                <strong>8. Circuito magnético:</strong> u_mΓ = ∮_Γ H⃗·ds⃗ [A] — tensiunea magnetomotoare.
+              </div>
+              <div class="lang-sec ro"><span class="lang-badge">🇷🇴 Română — Terminologie Examen</span>
+                <strong>Lege de mișcare:</strong> tot ce acționăm urmează o lege cinematică (poziții, viteze, accelerații).<br>
+                <strong>Fluxul electric:</strong> Φ_SΓ = ∬_SΓ E⃗·n̂ dA. <strong>Conservarea sarcinii:</strong> i_SΓ = −d(qVΓ)/dt.<br>
+                <strong>Inducția magnetică B:</strong> B⃗ = (μ·i)/(2π·r) × û_r.<br>
+                <strong>Forța electromagnetică (Laplace):</strong> F⃗₁₂ = i₂·l⃗ × B⃗₁₂.<br>
+                <strong>Intensitatea câmpului H:</strong> H⃗ = B⃗/μ.<br>
+                <strong>Legea fluxului magnetic (Gauss):</strong> Ψ = ∬_SΓclosed B⃗·dA⃗ = 0.<br>
+                <strong>Legea Faraday:</strong> e_Γ = ∮_Γ E⃗·ds⃗ = −dΨ_SΓ/dt.<br>
+                <strong>Legea circuitului magnetic:</strong> u_mΓ = ∮_Γ H⃗·ds⃗ [A].
+              </div>
+            </div>
+            <div id="legi-kid" class="eblock kid">
+              <div class="lang-sec pt"><span class="lang-badge">🇵🇹 Português — Analogia Simples</span>
+                ⚡ Imagina a eletricidade como água numa canalização. O campo E é a pressão. A corrente é o caudal. O campo magnético B é como um "tornado" invisível à volta do fio com corrente — quanto mais corrente, mais forte o tornado. A lei de Faraday é como um alternador de bicicleta: pedala (muda o fluxo) → acende a luz (tensão induzida).
+              </div>
+              <div class="lang-sec ro"><span class="lang-badge">🇷🗴 Română — Analogie Simplă</span>
+                ⚡ Curentul electric = apa dintr-un robinet. Câmpul B = un vârtej invizibil în jurul firului. Legea Faraday = dinamul de bicicletă: pedalezi (schimbi fluxul) → se aprinde lumina (tensiune indusă). Circuitul magnetic = circuitul electric dar pentru linii de câmp magnetic.
+              </div>
+            </div>
+            <div class="formula-box">
+              <span>&#x222E; H⃗ · ds⃗ = Σiₖ &nbsp; [A] &nbsp;&nbsp; (legea circuitului magnetic)</span>
+              <span>e_Γ = −dΨ_SΓ/dt &nbsp; [V] &nbsp;&nbsp; (legea Faraday)</span>
+              <span>F⃗ = i · l⃗ × B⃗ &nbsp;&nbsp; (forța Laplace)</span>
+              <span>&#x222C; B⃗ · dA⃗ = 0 &nbsp;&nbsp; (legea Gauss — flux magnetic)</span>
+              <span class="formula-meaning">E — intensitatea câmpului electric [V/m] &nbsp;·&nbsp; B — inducție magnetică [T] &nbsp;·&nbsp; H — intensitatea câmpului magnetic [A/m] &nbsp;·&nbsp; Ψ — flux magnetic [Wb]</span>
+            </div>
+
+            <div class="feynman-box" id="feynman-legi">
+              <div class="feynman-header">
+                <span class="feynman-icon">🧠</span>
+                <div>
+                  <div class="feynman-title">Técnica de Feynman</div>
+                  <div class="feynman-sub">Explica este conceito como se eu tivesse 10 anos. Sem fórmulas, apenas palavras.</div>
+                </div>
+              </div>
+              <textarea id="feynman-input-legi" class="feynman-textarea"
+                placeholder="Escreve aqui com as tuas palavras... (mín. 30 palavras)"></textarea>
+              <div class="feynman-actions">
+                <span id="feynman-counter-legi" class="feynman-counter">0 cuvinte</span>
+                <button onclick="submitFeynman('legi')" class="feynman-btn">✓ Analizează cu AI</button>
+              </div>
+              <div id="feynman-feedback-legi" class="feynman-feedback" style="display:none"></div>
+            </div>
+            <button class="explain-btn" onclick="askAI('legi')">⚡ Explică mai mult cu AI</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════
+           MOD CAMP (Cap. 2 início)
+      ═══════════════════════════════════════ -->
+      <div id="mod-camp" class="panel">
+        <div class="sim-card">
+          <div class="sim-head">
+            <div>
+              <div class="sim-title">Câmp Magnetic — Mărimi, Legi, Forțe</div>
+              <div class="sim-sub">Inducție B · Intensitate H · Permeabilitate μ · Energie Wₘ · Teorema Forțelor Generalizate</div>
+            </div>
+            <span class="badge">Cap. 2</span>
+          </div>
+          <div class="sim-body">
+            <div class="etabs">
+              <button class="etab active" onclick="etab(this,'camp-tech')">📐 Tehnic</button>
+              <button class="etab" onclick="etab(this,'camp-kid')">🧒 Super Simplu</button>
+            </div>
+            <div id="camp-tech" class="eblock show">
+              <div class="lang-sec pt"><span class="lang-badge">🇵🇹 Português — Explicação Técnica</span>
+                <strong>Inducção magnética B [T]:</strong> grandeza vetorial que quantifica o campo magnético. Num conductor reto: B = (μ·i)/(2π·r). <strong>Intensidade H [A/m]:</strong> H = B/μ — independente do material, depende só das correntes.<br>
+                <strong>Permeabilidade μ = μ₀·μᵣ:</strong> μ₀ = 4π×10⁻⁷ H/m (vácuo); μᵣ ≈ 1000–10000 (ferro).<br>
+                <strong>Energia magnética:</strong> Wₘ = L·I²/2 = Φ²/(2L) [J].<br>
+                <strong>Teorema das forças generalizadas:</strong> Xⱼ = (∂Wₘ/∂xⱼ)|ψ=ct — a força generalizada = derivada da energia magnética em relação à coordenada generalizada, a fluxo constante.
+              </div>
+              <div class="lang-sec ro"><span class="lang-badge">🇷🇴 Română — Terminologie Examen</span>
+                <strong>Inducția magnetică B [T]:</strong> B = (μ·i)/(2π·r) pentru conductor rectiliniu.<br>
+                <strong>Intensitatea câmpului H [A/m]:</strong> H = B/μ. Legea Ampère: ∮H·ds = ΣI.<br>
+                <strong>Permeabilitate:</strong> μ = μ₀·μᵣ; μ₀ = 4π×10⁻⁷ H/m; μᵣ(fier) ≈ 1000–10000.<br>
+                <strong>Energia magnetică:</strong> Wₘ = L·I²/2 [J].<br>
+                <strong>Teorema forțelor generalizate:</strong> Xⱼ = (∂Wₘ/∂xⱼ)|ψ=ct.
+              </div>
+            </div>
+            <div id="camp-kid" class="eblock kid">
+              <div class="lang-sec pt"><span class="lang-badge">🇵🇹 Português — Analogia Simples</span>
+                🧲 O campo magnético B é como a "força" de um íman. H é a "causa" (a corrente que cria o campo). B é o "efeito" (quanto campo há realmente, depende do material). Num ferro (μᵣ grande), a mesma corrente cria um campo B muito maior — é por isso que os núcleos dos transformadores são de ferro!
+              </div>
+              <div class="lang-sec ro"><span class="lang-badge">🇷🇴 Română — Analogie Simplă</span>
+                🧲 H = cauza (curentul care creează câmpul). B = efectul (câmpul real, depinde de material). În fier (μᵣ mare): același curent → B mult mai mare. De aceea miezurile transformatoarelor și motoarelor sunt din fier!
+              </div>
+            </div>
+            <div class="formula-box">
+              <span>B = μ₀ · μᵣ · H &nbsp; [T] &nbsp;&nbsp;&nbsp; H = B/μ &nbsp; [A/m]</span>
+              <span>Wₘ = L · I² / 2 = Φ² / (2L) &nbsp; [J]</span>
+              <span>Xⱼ = (∂Wₘ/∂xⱼ)|<sub>ψ=ct</sub> &nbsp; (teorema forțelor generalizate)</span>
+              <span class="formula-meaning">μ₀ = 4π×10⁻⁷ H/m &nbsp;·&nbsp; μᵣ(fier) ≈ 1000–10000 &nbsp;·&nbsp; L — inductanță [H] &nbsp;·&nbsp; Φ = ∬B·dA — flux [Wb]</span>
+            </div>
+
+            <div class="feynman-box" id="feynman-camp">
+              <div class="feynman-header">
+                <span class="feynman-icon">🧠</span>
+                <div>
+                  <div class="feynman-title">Técnica de Feynman</div>
+                  <div class="feynman-sub">Explica este conceito como se eu tivesse 10 anos. Sem fórmulas, apenas palavras.</div>
+                </div>
+              </div>
+              <textarea id="feynman-input-camp" class="feynman-textarea"
+                placeholder="Escreve aqui com as tuas palavras... (mín. 30 palavras)"></textarea>
+              <div class="feynman-actions">
+                <span id="feynman-counter-camp" class="feynman-counter">0 cuvinte</span>
+                <button onclick="submitFeynman('camp')" class="feynman-btn">✓ Analizează cu AI</button>
+              </div>
+              <div id="feynman-feedback-camp" class="feynman-feedback" style="display:none"></div>
+            </div>
+            <button class="explain-btn" onclick="askAI('camp')">⚡ Explică mai mult cu AI</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════
+           MOD PERIE (Cap. 5)
+      ═══════════════════════════════════════ -->
+      <div id="mod-perie" class="panel">
+        <div class="sim-card">
+          <div class="sim-head">
+            <div>
+              <div class="sim-title">Sistem Perie-Colector și Înfășurare Buclată</div>
+              <div class="sim-sub">Lamele Colector · Perii Fixe · Înfășurare Paralelă · Căi de Curent</div>
+            </div>
+            <span class="badge">Cap. 5</span>
+          </div>
+          <div class="sim-body">
+            <div class="etabs">
+              <button class="etab active" onclick="etab(this,'perie-tech')">📐 Tehnic</button>
+              <button class="etab" onclick="etab(this,'perie-kid')">🧒 Super Simplu</button>
+            </div>
+            <div id="perie-tech" class="eblock show">
+              <div class="lang-sec pt"><span class="lang-badge">🇵🇹 Português — Explicação Técnica</span>
+                O sistema escova-colector é o mecanismo que permite a comutação mecânica da corrente no rotor do motor CC. <strong>Lamelas do colector</strong> (numeradas 1–24): duas meias-colunas de anel presas à espira — rodam com o rotor (móveis). <strong>Escovas</strong> (P1, P2, P3, P4): fixas, pressionadas contra as lamelas — permitem o contacto elétrico ao rotor em rotação. A cada posição do rotor, as escovas invertem a polaridade da corrente nas bobinas → <strong>o sentido do torque mantém-se constante</strong>. <strong>Enrolamento em laço simples:</strong> espira 1 sai da lamela 1, atravessa o espaço entre os polos N e S, percorre a ranhura, volta pelo fundo do rotor e chega à lamela 2. As espiras estão em série entre escovas adjacentes → <strong>nº de vias paralelas a = 2p</strong>.
+              </div>
+              <div class="lang-sec ro"><span class="lang-badge">🇷🇴 Română — Terminologie Examen</span>
+                <strong>Lamelele de colector</strong> (numerotate 1–24): două jumătăți de inel prinse de spire, se rotesc cu rotorul (mobile). <strong>Periile</strong> (P1–P4) sunt fixe, grupate câte 2. Se schimbă atât polaritatea câmpului magnetic cât și felul periei. <strong>Înfășurare buclată simplă:</strong> spira 1 pleacă de la lamela 1 → spațiul pol N-S → latura rotorului → spatele → lamela 2. Spirele în serie între periile adiacente. Număr căi paralele: <strong>a = 2p</strong>. f.e.m.: E = (p·N·n·Ψ)/(60·a) = kₑ·n·Ψ.
+              </div>
+            </div>
+            <div id="perie-kid" class="eblock kid">
+              <div class="lang-sec pt"><span class="lang-badge">🇵🇹 Português — Analogia Simples</span>
+                🎰 Imagina uma slot machine com contactos rotativos: as lamelas são os contactos que giram com o rotor. As escovas são os "dedos" fixos que tocam nos contactos. A cada posição, os "dedos" mudam qual bobina recebe corrente positiva ou negativa → o motor sempre roda no mesmo sentido. Sem escovas → sem comutação → sem torque!
+              </div>
+              <div class="lang-sec ro"><span class="lang-badge">🇷🇴 Română — Analogie Simplă</span>
+                🎰 Lamelele = contacte rotative. Periile = "degete" fixe care ating contactele. La fiecare poziție, "degetele" schimbă sensul curentului prin bobine → cuplul rămâne în același sens. Fără perii → fără comutare → fără cuplu!
+              </div>
+            </div>
+            <div class="formula-box">
+              <span>E = (p · N · n · Ψ) / (60 · a) = kₑ · n · Ψ &nbsp; [V]</span>
+              <span>a = 2p &nbsp; (nr. căi paralele la înfășurare buclată simplă)</span>
+              <span class="formula-meaning">p — perechi de poli &nbsp;·&nbsp; N — nr. total conductori activi &nbsp;·&nbsp; n — turație [rot/min] &nbsp;·&nbsp; a — nr. căi paralele &nbsp;·&nbsp; Ψ — flux per pol [Wb]</span>
+            </div>
+            <div class="adv-grid">
+              <div class="adv">
+                <div class="adv-t n">❌ Dezavantaje sistem perie-colector</div>
+                <div class="adv-i">Uzura periilor → întreținere periodică</div>
+                <div class="adv-i">Frecare → căldură → pierderi</div>
+                <div class="adv-i">Scântei → medii explozive interzis</div>
+                <div class="adv-i">Viteza periferială max. ~30 m/s</div>
+              </div>
+              <div class="adv">
+                <div class="adv-t p">✅ Avantaje (față de BLDC)</div>
+                <div class="adv-i">Simplitate constructivă</div>
+                <div class="adv-i">Cost redus al statorului</div>
+                <div class="adv-i">Comutație automată fără electronice</div>
+                <div class="adv-i">Tehnologie matură, ușor de reparat</div>
+              </div>
+            </div>
+
+            <div class="feynman-box" id="feynman-perie">
+              <div class="feynman-header">
+                <span class="feynman-icon">🧠</span>
+                <div>
+                  <div class="feynman-title">Técnica de Feynman</div>
+                  <div class="feynman-sub">Explica este conceito como se eu tivesse 10 anos. Sem fórmulas, apenas palavras.</div>
+                </div>
+              </div>
+              <textarea id="feynman-input-perie" class="feynman-textarea"
+                placeholder="Escreve aqui com as tuas palavras... (mín. 30 palavras)"></textarea>
+              <div class="feynman-actions">
+                <span id="feynman-counter-perie" class="feynman-counter">0 cuvinte</span>
+                <button onclick="submitFeynman('perie')" class="feynman-btn">✓ Analizează cu AI</button>
+              </div>
+              <div id="feynman-feedback-perie" class="feynman-feedback" style="display:none"></div>
+            </div>
+            <button class="explain-btn" onclick="askAI('perie')">⚡ Explică mai mult cu AI</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════
+           MOD FLUX
+      ═══════════════════════════════════════ -->
+      <div id="mod-flux" class="panel">
+        <div class="sim-card">
+          <div class="sim-head">
+            <div>
+              <div class="sim-title">Fluxul Magnetic</div>
+              <div class="sim-sub">Legea Gauss · Induție B · Flux Ψ · Legea Inducției</div>
+            </div>
+            <span class="badge">Cap. 1</span>
+          </div>
+          <div class="sim-body">
+
+            <div class="etabs">
+              <button class="etab active" onclick="etab(this,'flux-tech')">📐 Tehnic</button>
+              <button class="etab" onclick="etab(this,'flux-kid')">🧒 Super Simplu</button>
+            </div>
+
+            <div id="flux-tech" class="eblock show">
+              <div class="lang-section pt"><span class="lang-badge">🇵🇹 Português</span>
+                O fluxo magnético Ψ mede quantas linhas de campo B atravessam uma superfície S. θ=0° → fluxo máximo; θ=90° → fluxo zero. A Lei de Gauss garante que as linhas são circuitos fechados (∮B·dA = 0). A lei de Faraday: qualquer variação de fluxo gera uma tensão <strong>e = −dΛ/dt</strong>.
+              </div>
+              <div class="lang-section ro"><span class="lang-badge">🇷🇴 Română</span>
+                Fluxul magnetic <strong>Ψ = B · S · cos θ</strong> exprimă cantitatea de linii de câmp ce traversează S. Legea Gauss: ∮B·dA = 0 (linii închise). Variația fluxului înlănțuit Λ = N·Ψ induce: <strong>e = −dΛ/dt</strong> (legea Faraday). Baza funcționării tuturor mașinilor electrice.
+              </div>
+            </div>
+            <div id="flux-kid" class="eblock kid">
+              <div class="lang-section pt"><span class="lang-badge">🇵🇹 Português simples</span>
+                🚿 Imagina um duche de água: o campo B são os jatos. A superfície S é a tua mão. Mão <em>perpendicular</em> aos jatos → apanhas muita água (fluxo máximo). Mão <em>paralela</em> → não apanhas nada (fluxo zero). O ângulo θ é o quanto inclinaste a mão!
+              </div>
+              <div class="lang-section ro"><span class="lang-badge">🇷🇴 Română simplă</span>
+                🧲 Mâna perpendiculară pe jeturi = flux maxim. Mâna paralelă = flux zero. Cu cât B e mai puternic, cu atât „ploaia magnetică" e mai intensă!
+              </div>
+            </div>
+
+            <div class="formula-box">
+              <span>Ψ = B · S · cos θ &nbsp; [Wb]</span>
+              <span>Λ = N · Ψ &nbsp; [Wb-spire]</span>
+              <span>e = −dΛ/dt = −N · dΨ/dt &nbsp; [V]</span>
+              <span class="formula-meaning">B — inducție magnetică [T] &nbsp;·&nbsp; S — suprafață [m²] &nbsp;·&nbsp; θ — unghiul dintre <b>B</b> și normala la suprafață &nbsp;·&nbsp; N — număr de spire</span>
+            </div>
+
+            <div class="cv-wrap"><canvas id="c-flux" height="230"></canvas></div>
+
+            <div class="ctrl-grid">
+              <div class="ctrl">
+                <div class="ctrl-lbl">Câmp magnetic</div>
+                <div class="ctrl-name">B [mT]</div>
+                <div class="ctrl-row">
+                  <input type="range" id="fB" min="1" max="300" value="120" oninput="rFlux()">
+                  <span class="ctrl-val" id="fBv">120 mT</span>
+                </div>
+              </div>
+              <div class="ctrl">
+                <div class="ctrl-lbl">Suprafață</div>
+                <div class="ctrl-name">S [cm²]</div>
+                <div class="ctrl-row">
+                  <input type="range" id="fS" min="1" max="100" value="50" oninput="rFlux()">
+                  <span class="ctrl-val" id="fSv">50 cm²</span>
+                </div>
+              </div>
+              <div class="ctrl">
+                <div class="ctrl-lbl">Unghi</div>
+                <div class="ctrl-name">θ [grade]</div>
+                <div class="ctrl-row">
+                  <input type="range" id="fT" min="0" max="90" value="0" oninput="rFlux()">
+                  <span class="ctrl-val" id="fTv">0°</span>
+                </div>
+              </div>
+              <div class="ctrl">
+                <div class="ctrl-lbl">Nr. spire</div>
+                <div class="ctrl-name">N [—]</div>
+                <div class="ctrl-row">
+                  <input type="range" id="fN" min="1" max="500" value="1" oninput="rFlux()">
+                  <span class="ctrl-val" id="fNv">1 esp.</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="metrics">
+              <div class="mc">
+                <div class="mc-lbl">Flux Ψ</div>
+                <div class="mc-val" id="fPsi">0</div>
+                <div class="mc-unit">μWb</div>
+              </div>
+              <div class="mc">
+                <div class="mc-lbl">Flux înlănțuit Λ</div>
+                <div class="mc-val" id="fLam">0</div>
+                <div class="mc-unit">μWb</div>
+              </div>
+              <div class="mc">
+                <div class="mc-lbl">cos θ</div>
+                <div class="mc-val" id="fCos">1.0</div>
+                <div class="mc-unit">—</div>
+              </div>
+            </div>
+
+
+            <div class="feynman-box" id="feynman-flux">
+              <div class="feynman-header">
+                <span class="feynman-icon">🧠</span>
+                <div>
+                  <div class="feynman-title">Técnica de Feynman</div>
+                  <div class="feynman-sub">Explica este conceito como se eu tivesse 10 anos. Sem fórmulas, apenas palavras.</div>
+                </div>
+              </div>
+              <textarea id="feynman-input-flux" class="feynman-textarea"
+                placeholder="Escreve aqui com as tuas palavras... (mín. 30 palavras)"></textarea>
+              <div class="feynman-actions">
+                <span id="feynman-counter-flux" class="feynman-counter">0 cuvinte</span>
+                <button onclick="submitFeynman('flux')" class="feynman-btn">✓ Analizează cu AI</button>
+              </div>
+              <div id="feynman-feedback-flux" class="feynman-feedback" style="display:none"></div>
+            </div>
+            <button class="explain-btn" onclick="askAI('flux')">⚡ Explică mai mult cu AI</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════
+           MOD FORTE
+      ═══════════════════════════════════════ -->
+      <div id="mod-forte" class="panel">
+        <div class="sim-card">
+          <div class="sim-head">
+            <div>
+              <div class="sim-title">Forța Electromagnetică (Laplace)</div>
+              <div class="sim-sub">F = i·L×B · Regula Mâinii Drepte · Baza Motoarelor</div>
+            </div>
+            <span class="badge">Cap. 1</span>
+          </div>
+          <div class="sim-body">
+
+            <div class="etabs">
+              <button class="etab active" onclick="etab(this,'forte-tech')">📐 Tehnic</button>
+              <button class="etab" onclick="etab(this,'forte-kid')">🧒 Super Simplu</button>
+            </div>
+
+            <div id="forte-tech" class="eblock show">
+              <div class="lang-section pt"><span class="lang-badge">🇵🇹 Português</span>
+                Quando uma corrente i atravessa um condutor de comprimento L num campo B, o condutor sofre a força de Laplace <strong>F = i·L·B·sin θ</strong>. É a base de todos os motores elétricos. Máxima quando condutor ⊥ campo (θ=90°), zero quando paralelo (θ=0°). Regra da mão direita: dedos na corrente, curvam para B, polegar indica F.
+              </div>
+              <div class="lang-section ro"><span class="lang-badge">🇷🇴 Română</span>
+                Forța Laplace <strong>F = i · L · B · sin θ</strong> acționează pe conductor de lungime L, parcurs de curentul i, aflat în câmpul B. Maximă la θ=90° (conductor ⊥ câmp), nulă la θ=0°. Regula mâinii drepte: degetul mare = curent, celelalte = câmp B, palma = forța F.
+              </div>
+            </div>
+            <div id="forte-kid" class="eblock kid">
+              <div class="lang-section pt"><span class="lang-badge">🇵🇹 Português simples</span>
+                🏊 Imagina que nadas num rio: tu és o condutor com corrente. O campo B é a corrente do rio. Se nadas CONTRA o rio (θ=90°) → és mais empurrado. Se nadas COM o rio (θ=0°) → não és empurrado. O motor usa isto: corrente + campo magnético = rotação!
+              </div>
+              <div class="lang-section ro"><span class="lang-badge">🇷🇴 Română simplă</span>
+                🏊 Imaginează-ți un om în piscină (câmpul B = apa). Brațul perpendicular pe curent (θ=90°) → apa împinge maxim. Paralel → nu simte nimic. Motoarele electrice: curent + câmp = rotație!
+              </div>
+            </div>
+
+            <div class="formula-box">
+              <span><b>F</b> = i (<b>L</b> × <b>B</b>) &nbsp; ⟹ &nbsp; |F| = i · L · B · sin θ &nbsp; [N]</span>
+              <span>M = F · r = kₘ · Ψ · i &nbsp; [N·m]</span>
+              <span class="formula-meaning">i — curent [A] &nbsp;·&nbsp; L — lungimea conductorului activ [m] &nbsp;·&nbsp; B — inducție magnetică [T] &nbsp;·&nbsp; θ — unghiul dintre direcția curentului și <b>B</b></span>
+            </div>
+
+            <div class="cv-wrap"><canvas id="c-forte" height="230"></canvas></div>
+
+            <div class="ctrl-grid">
+              <div class="ctrl">
+                <div class="ctrl-lbl">Curent</div>
+                <div class="ctrl-name">i [A]</div>
+                <div class="ctrl-row">
+                  <input type="range" id="Foi" min="0" max="100" value="20" oninput="rForte()">
+                  <span class="ctrl-val" id="Foiv">20 A</span>
+                </div>
+              </div>
+              <div class="ctrl">
+                <div class="ctrl-lbl">Lungime conductor</div>
+                <div class="ctrl-name">L [cm]</div>
+                <div class="ctrl-row">
+                  <input type="range" id="FoL" min="1" max="100" value="30" oninput="rForte()">
+                  <span class="ctrl-val" id="FoLv">30 cm</span>
+                </div>
+              </div>
+              <div class="ctrl">
+                <div class="ctrl-lbl">Câmp magnetic</div>
+                <div class="ctrl-name">B [mT]</div>
+                <div class="ctrl-row">
+                  <input type="range" id="FoB" min="1" max="1000" value="200" oninput="rForte()">
+                  <span class="ctrl-val" id="FoBv">200 mT</span>
+                </div>
+              </div>
+              <div class="ctrl">
+                <div class="ctrl-lbl">Unghi i față de B</div>
+                <div class="ctrl-name">θ [grade]</div>
+                <div class="ctrl-row">
+                  <input type="range" id="FoT" min="0" max="180" value="90" oninput="rForte()">
+                  <span class="ctrl-val" id="FoTv">90°</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="metrics">
+              <div class="mc">
+                <div class="mc-lbl">Forța F</div>
+                <div class="mc-val" id="FoF">0</div>
+                <div class="mc-unit">N</div>
+              </div>
+              <div class="mc">
+                <div class="mc-lbl">sin θ</div>
+                <div class="mc-val" id="FoSin">1.0</div>
+                <div class="mc-unit">—</div>
+              </div>
+              <div class="mc">
+                <div class="mc-lbl">Putere P</div>
+                <div class="mc-val" id="FoP">0</div>
+                <div class="mc-unit">W</div>
+              </div>
+            </div>
+
+
+            <div class="feynman-box" id="feynman-forte">
+              <div class="feynman-header">
+                <span class="feynman-icon">🧠</span>
+                <div>
+                  <div class="feynman-title">Técnica de Feynman</div>
+                  <div class="feynman-sub">Explica este conceito como se eu tivesse 10 anos. Sem fórmulas, apenas palavras.</div>
+                </div>
+              </div>
+              <textarea id="feynman-input-forte" class="feynman-textarea"
+                placeholder="Escreve aqui com as tuas palavras... (mín. 30 palavras)"></textarea>
+              <div class="feynman-actions">
+                <span id="feynman-counter-forte" class="feynman-counter">0 cuvinte</span>
+                <button onclick="submitFeynman('forte')" class="feynman-btn">✓ Analizează cu AI</button>
+              </div>
+              <div id="feynman-feedback-forte" class="feynman-feedback" style="display:none"></div>
+            </div>
+            <button class="explain-btn" onclick="askAI('forte')">⚡ Explică mai mult cu AI</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════
+           MOD MCC
+      ═══════════════════════════════════════ -->
+      <div id="mod-mcc" class="panel">
+        <div class="sim-card">
+          <div class="sim-head">
+            <div>
+              <div class="sim-title">Motor de Curent Continuu (MCC)</div>
+              <div class="sim-sub">Excitație Derivație · Caracteristică Mecanică · Sistem Perie-Colector</div>
+            </div>
+            <span class="badge">Cap. 7–8</span>
+          </div>
+          <div class="sim-body">
+
+            <div class="etabs">
+              <button class="etab active" onclick="etab(this,'mcc-tech')">📐 Tehnic</button>
+              <button class="etab" onclick="etab(this,'mcc-kid')">🧒 Super Simplu</button>
+            </div>
+
+            <div id="mcc-tech" class="eblock show">
+              <div class="lang-section pt"><span class="lang-badge">🇵🇹 Português</span>
+                No motor CC com excitação em derivação, a bobina de campo Re está em PARALELO com a armadura → fluxo Ψ constante. Equações fundamentais: <strong>U = E + Rₐ·Iₐ</strong>, <strong>E = kₑ·Ψ·n</strong>, <strong>M = kₘ·Ψ·Iₐ</strong>. A velocidade cai ligeiramente com a carga → característica RÍGIDA. A reação do induzido distorce o campo magnético.
+              </div>
+              <div class="lang-section ro"><span class="lang-badge">🇷🇴 Română</span>
+                MCC derivație: bobina de câmp Re în paralel cu armătura → flux Ψ constant. Caracteristica mecanică n = f(Iₐ) este liniară și rigidă. Sistemul perie-colector realizează comutarea — principal dezavantaj față de BLDC.
+              </div>
+            </div>
+            <div id="mcc-kid" class="eblock kid">
+              <div class="lang-section pt"><span class="lang-badge">🇵🇹 Português simples</span>
+                🚗 O motor CC é como um carro com controlo de velocidade. A tensão U é o "acelerador" — mais tensão = mais velocidade. A resistência Rₐ é como a "resistência do ar" — mais corrente (mais carga), a velocidade cai um pouco. As escovas (perie) são como contactos que se gastam — precisam de manutenção!
+              </div>
+              <div class="lang-section ro"><span class="lang-badge">🇷🇴 Română simplă</span>
+                🚗 MCC e ca o mașină cu transmisie manuală. Periile sunt ca balaii de măturat — uzează și produc scântei. De aceea au apărut motoarele fără perii (BLDC)!
+              </div>
+            </div>
+
+            <div class="formula-box">
+              <span>U = E + Rₐ · Iₐ &nbsp; [V]</span>
+              <span>E = kₑ · Ψ · n &nbsp; [V] &nbsp;&nbsp;&nbsp; M = kₘ · Ψ · Iₐ &nbsp; [N·m]</span>
+              <span>n = (U − Rₐ · Iₐ) / (kₑ · Ψ) &nbsp; [rot/min]</span>
+              <span class="formula-meaning">U — tensiune de alimentare [V] &nbsp;·&nbsp; E — f.e.m. indusă [V] &nbsp;·&nbsp; Rₐ — rezistența armăturii [Ω] &nbsp;·&nbsp; kₑ, kₘ — constante constructive ale mașinii</span>
+            </div>
+
+            <div class="cv-wrap"><canvas id="c-mcc" height="230"></canvas></div>
+
+            <div class="ctrl-grid">
+              <div class="ctrl">
+                <div class="ctrl-lbl">Tensiune alimentare</div>
+                <div class="ctrl-name">U [V]</div>
+                <div class="ctrl-row">
+                  <input type="range" id="mU" min="50" max="500" step="5" value="220" oninput="rMCC()">
+                  <span class="ctrl-val" id="mUv">220 V</span>
+                </div>
+              </div>
+              <div class="ctrl">
+                <div class="ctrl-lbl">Curent armătură</div>
+                <div class="ctrl-name">Iₐ [A]</div>
+                <div class="ctrl-row">
+                  <input type="range" id="mIa" min="0" max="150" value="30" oninput="rMCC()">
+                  <span class="ctrl-val" id="mIav">30 A</span>
+                </div>
+              </div>
+              <div class="ctrl">
+                <div class="ctrl-lbl">Rezistență armătură</div>
+                <div class="ctrl-name">Rₐ [Ω]</div>
+                <div class="ctrl-row">
+                  <input type="range" id="mRa" min="0.1" max="10" step="0.1" value="0.5" oninput="rMCC()">
+                  <span class="ctrl-val" id="mRav">0.5 Ω</span>
+                </div>
+              </div>
+              <div class="ctrl">
+                <div class="ctrl-lbl">Const. viteză kₑ·Ψ</div>
+                <div class="ctrl-name">kₑ·Ψ [V·s/rad]</div>
+                <div class="ctrl-row">
+                  <input type="range" id="mKe" min="0.5" max="5" step="0.05" value="1.8" oninput="rMCC()">
+                  <span class="ctrl-val" id="mKev">1.8</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="metrics">
+              <div class="mc">
+                <div class="mc-lbl">Viteză n</div>
+                <div class="mc-val" id="mN">0</div>
+                <div class="mc-unit">rot/min</div>
+              </div>
+              <div class="mc">
+                <div class="mc-lbl">f.e.m. E</div>
+                <div class="mc-val" id="mE">0</div>
+                <div class="mc-unit">V</div>
+              </div>
+              <div class="mc">
+                <div class="mc-lbl">Putere Pm</div>
+                <div class="mc-val" id="mPm">0</div>
+                <div class="mc-unit">W</div>
+              </div>
+            </div>
+
+            <div class="adv-grid">
+              <div class="adv">
+                <div class="adv-t p">✅ Avantaje MCC</div>
+                <div class="adv-i">Reglaj simplu al turației prin U</div>
+                <div class="adv-i">Cuplu de pornire ridicat</div>
+                <div class="adv-i">Caracteristică mecanică rigidă (derivație)</div>
+                <div class="adv-i">Cost redus, tehnologie matură</div>
+              </div>
+              <div class="adv">
+                <div class="adv-t n">❌ Dezavantaje MCC</div>
+                <div class="adv-i">Uzura periilor → întreținere periodică</div>
+                <div class="adv-i">Scântei → medii explozive interzis</div>
+                <div class="adv-i">Viteză max. limitată de colector</div>
+                <div class="adv-i">Reacția indusului slăbește fluxul</div>
+              </div>
+            </div>
+
+
+            <div class="feynman-box" id="feynman-mcc">
+              <div class="feynman-header">
+                <span class="feynman-icon">🧠</span>
+                <div>
+                  <div class="feynman-title">Técnica de Feynman</div>
+                  <div class="feynman-sub">Explica este conceito como se eu tivesse 10 anos. Sem fórmulas, apenas palavras.</div>
+                </div>
+              </div>
+              <textarea id="feynman-input-mcc" class="feynman-textarea"
+                placeholder="Escreve aqui com as tuas palavras... (mín. 30 palavras)"></textarea>
+              <div class="feynman-actions">
+                <span id="feynman-counter-mcc" class="feynman-counter">0 cuvinte</span>
+                <button onclick="submitFeynman('mcc')" class="feynman-btn">✓ Analizează cu AI</button>
+              </div>
+              <div id="feynman-feedback-mcc" class="feynman-feedback" style="display:none"></div>
+            </div>
+            <button class="explain-btn" onclick="askAI('mcc')">⚡ Explică mai mult cu AI</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════
+           MOD TRANSFER
+      ═══════════════════════════════════════ -->
+      <div id="mod-transfer" class="panel">
+        <div class="sim-card">
+          <div class="sim-head">
+            <div>
+              <div class="sim-title">Funcția de Transfer MCC</div>
+              <div class="sim-sub">Studiu Dinamic · Răspuns la Treaptă · Stabilitate · Poli</div>
+            </div>
+            <span class="badge">Cap. 9–11</span>
+          </div>
+          <div class="sim-body">
+
+            <div class="etabs">
+              <button class="etab active" onclick="etab(this,'transfer-tech')">📐 Tehnic</button>
+              <button class="etab" onclick="etab(this,'transfer-kid')">🧒 Super Simplu</button>
+            </div>
+
+            <div id="transfer-tech" class="eblock show">
+              <div class="lang-section pt"><span class="lang-badge">🇵🇹 Português</span>
+                A função de transferência G(s) = Ω(s)/U(s) descreve como o motor responde a uma variação de tensão. É um sistema de 2ª ordem. ωₙ define a rapidez; ξ: &lt;1 oscila, =1 crítico (mais rápido sem oscilações), &gt;1 lento sem oscilações. Os polos s₁,₂ = −ξωₙ ± ωₙ√(ξ²−1) determinam a estabilidade.
+              </div>
+              <div class="lang-section ro"><span class="lang-badge">🇷🇴 Română</span>
+                Funcția de transfer: <strong>G(s) = k / (Lₐ·Jₘ·s² + Rₐ·Jₘ·s + k²)</strong>. Sistem de ordinul 2. ωₙ = √(k²/Lₐ·Jₘ) — pulsația naturală. ξ = (Rₐ/2)·√(Jₘ/k²Lₐ) — factor de amortizare. Polii s₁,₂ = −ξωₙ ± ωₙ√(ξ²−1) determină stabilitatea.
+              </div>
+            </div>
+            <div id="transfer-kid" class="eblock kid">
+              <div class="lang-section pt"><span class="lang-badge">🇵🇹 Português simples</span>
+                🍺 Imagina que enches um copo de cerveja. ωₙ grande = enches rápido. ξ pequeno → rápido mas muita espuma (oscilações!). ξ = 1 → enches perfeitamente sem espuma. ξ grande → devagar sem espuma. Engenheiro quer ξ ≈ 0.7: rápido e pouca espuma!
+              </div>
+              <div class="lang-section ro"><span class="lang-badge">🇷🇴 Română simplă</span>
+                🏀 Minge pe saltea: ξ mic = sare mult. ξ=1 = cel mai rapid fără oscilații. ξ mare = lent, monoton. ωₙ = viteza răspunsului, ξ = amortizarea.
+              </div>
+            </div>
+
+            <div class="formula-box">
+              <span>G(s) = Ω(s)/U(s) = k / (Lₐ Jₘ s² + Rₐ Jₘ s + k²)</span>
+              <span>ωₙ = √(k² / Lₐ Jₘ) &nbsp; [rad/s] &nbsp;&nbsp;&nbsp; ξ = (Rₐ / 2) · √(Jₘ / k² Lₐ)</span>
+              <span>s₁,₂ = −ξ ωₙ ± ωₙ √(ξ² − 1)</span>
+              <span class="formula-meaning">Lₐ — inductanța armăturii [H] &nbsp;·&nbsp; Jₘ — momentul de inerție [kg·m²] &nbsp;·&nbsp; k — constanta electrom. [V·s/rad] &nbsp;·&nbsp; ξ &lt; 1 subamortizat · ξ = 1 critic · ξ &gt; 1 supraamortizat</span>
+            </div>
+
+            <div class="cv-wrap"><canvas id="c-transfer" height="230"></canvas></div>
+
+            <div class="ctrl-grid">
+              <div class="ctrl">
+                <div class="ctrl-lbl">Rezistență armătură</div>
+                <div class="ctrl-name">Rₐ [Ω]</div>
+                <div class="ctrl-row">
+                  <input type="range" id="tRa" min="0.1" max="20" step="0.1" value="2" oninput="rTransfer()">
+                  <span class="ctrl-val" id="tRav">2 Ω</span>
+                </div>
+              </div>
+              <div class="ctrl">
+                <div class="ctrl-lbl">Inductanță armătură</div>
+                <div class="ctrl-name">L [mH]</div>
+                <div class="ctrl-row">
+                  <input type="range" id="tL" min="1" max="500" value="50" oninput="rTransfer()">
+                  <span class="ctrl-val" id="tLv">50 mH</span>
+                </div>
+              </div>
+              <div class="ctrl">
+                <div class="ctrl-lbl">Moment inerție</div>
+                <div class="ctrl-name">Jₘ [g·cm²]</div>
+                <div class="ctrl-row">
+                  <input type="range" id="tJ" min="1" max="1000" value="200" oninput="rTransfer()">
+                  <span class="ctrl-val" id="tJv">200 g·cm²</span>
+                </div>
+              </div>
+              <div class="ctrl">
+                <div class="ctrl-lbl">Constanta k</div>
+                <div class="ctrl-name">k [V·s/rad]</div>
+                <div class="ctrl-row">
+                  <input type="range" id="tk" min="0.1" max="10" step="0.1" value="1.5" oninput="rTransfer()">
+                  <span class="ctrl-val" id="tkv">1.5</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="metrics">
+              <div class="mc">
+                <div class="mc-lbl">Pulsație ωₙ</div>
+                <div class="mc-val" id="tWn">0</div>
+                <div class="mc-unit">rad/s</div>
+              </div>
+              <div class="mc">
+                <div class="mc-lbl">Amortizare ξ</div>
+                <div class="mc-val" id="tXi">0</div>
+                <div class="mc-unit">—</div>
+              </div>
+              <div class="mc">
+                <div class="mc-lbl">Regim</div>
+                <div class="mc-val" id="tReg" style="font-size:13px">—</div>
+                <div class="mc-unit">—</div>
+              </div>
+            </div>
+
+
+            <div class="feynman-box" id="feynman-transfer">
+              <div class="feynman-header">
+                <span class="feynman-icon">🧠</span>
+                <div>
+                  <div class="feynman-title">Técnica de Feynman</div>
+                  <div class="feynman-sub">Explica este conceito como se eu tivesse 10 anos. Sem fórmulas, apenas palavras.</div>
+                </div>
+              </div>
+              <textarea id="feynman-input-transfer" class="feynman-textarea"
+                placeholder="Escreve aqui com as tuas palavras... (mín. 30 palavras)"></textarea>
+              <div class="feynman-actions">
+                <span id="feynman-counter-transfer" class="feynman-counter">0 cuvinte</span>
+                <button onclick="submitFeynman('transfer')" class="feynman-btn">✓ Analizează cu AI</button>
+              </div>
+              <div id="feynman-feedback-transfer" class="feynman-feedback" style="display:none"></div>
+            </div>
+            <button class="explain-btn" onclick="askAI('transfer')">⚡ Explică mai mult cu AI</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════
+           MOD ASYNC
+      ═══════════════════════════════════════ -->
+      <div id="mod-async" class="panel">
+        <div class="sim-card">
+          <div class="sim-head">
+            <div>
+              <div class="sim-title">Motor Asincron Trifazat</div>
+              <div class="sim-sub">Alunecare · Cuplu Kloss · Caracteristică Mecanică · Câmp Rotitor</div>
+            </div>
+            <span class="badge">Asincron</span>
+          </div>
+          <div class="sim-body">
+
+            <div class="etabs">
+              <button class="etab active" onclick="etab(this,'async-tech')">📐 Tehnic</button>
+              <button class="etab" onclick="etab(this,'async-kid')">🧒 Super Simplu</button>
+            </div>
+
+            <div id="async-tech" class="eblock show">
+              <div class="lang-section pt"><span class="lang-badge">🇵🇹 Português</span>
+                O campo rotativo do estator (a f₁) "arrasta" o rotor, mas o rotor NUNCA atinge a velocidade síncrona — há sempre escorregamento s = (n₁−n₂)/n₁. O torque máximo Mₘ ocorre no escorregamento crítico sₘ = R₂/Xₛ. Zona A (s &lt; sₘ): estável. Zona B (s &gt; sₘ): instável.
+              </div>
+              <div class="lang-section ro"><span class="lang-badge">🇷🇴 Română</span>
+                Alunecarea <strong>s = (n₁−n₂)/n₁</strong>. Viteza sincronă: n₁ = 60·f/p. Momentul maxim Kloss: <strong>Mₘ = 3p·U₁²/(2ω₁·Xₛ)</strong>, alunecarea critică: <strong>sₘ = R₂/Xₛ</strong>. Formula Kloss: M = 2·Mₘ/(s/sₘ + sₘ/s). Zona A stabilă; Zona B instabilă.
+              </div>
+            </div>
+            <div id="async-kid" class="eblock kid">
+              <div class="lang-section pt"><span class="lang-badge">🇵🇹 Português simples</span>
+                🐕 Imagina que corres com o teu cão: tu és o campo magnético (velocidade n₁), o cão é o rotor. O cão NUNCA te consegue apanhar (escorregamento s). Sem carga: quase te apanha (s pequeno). Com carga: fica muito atrás (s grande). Passa o sₘ → zona B → o cão "cai"!
+              </div>
+              <div class="lang-section ro"><span class="lang-badge">🇷🇴 Română simplă</span>
+                🐕 Rotorul încearcă să "prindă" câmpul rotitor — dar nu reușește niciodată (de unde "asincron"). La mers ușor s≈2%. Depășești sₘ (zona B) → motorul nu mai poate trage sarcina!
+              </div>
+            </div>
+
+            <div class="formula-box">
+              <span>s = (n₁ − n₂) / n₁ = f₂ / f₁ &nbsp; [—]</span>
+              <span>Mₘ = 3p U₁² / (2 ω₁ Xₛ) &nbsp; [N·m] &nbsp;&nbsp;&nbsp; sₘ = R₂ / Xₛ &nbsp; [—]</span>
+              <span>M = 2 Mₘ / (s/sₘ + sₘ/s) &nbsp; (formula Kloss)</span>
+              <span class="formula-meaning">n₁ = 60 f₁/p — viteză sincronă [rot/min] &nbsp;·&nbsp; Xₛ — reactanța de dispersie totală [Ω] &nbsp;·&nbsp; R₂ — rezistența rotorică raportată la stator [Ω]</span>
+            </div>
+
+            <div class="cv-wrap"><canvas id="c-async" height="230"></canvas></div>
+
+            <div class="ctrl-grid">
+              <div class="ctrl">
+                <div class="ctrl-lbl">Tensiune fază</div>
+                <div class="ctrl-name">U₁ [V]</div>
+                <div class="ctrl-row">
+                  <input type="range" id="asU" min="100" max="500" step="10" value="220" oninput="rAsync()">
+                  <span class="ctrl-val" id="asUv">220 V</span>
+                </div>
+              </div>
+              <div class="ctrl">
+                <div class="ctrl-lbl">Frecvență rețea</div>
+                <div class="ctrl-name">f₁ [Hz]</div>
+                <div class="ctrl-row">
+                  <input type="range" id="asF" min="10" max="100" value="50" oninput="rAsync()">
+                  <span class="ctrl-val" id="asFv">50 Hz</span>
+                </div>
+              </div>
+              <div class="ctrl">
+                <div class="ctrl-lbl">Rezistență rotorică</div>
+                <div class="ctrl-name">R₂ [Ω]</div>
+                <div class="ctrl-row">
+                  <input type="range" id="asR2" min="0.1" max="10" step="0.1" value="0.5" oninput="rAsync()">
+                  <span class="ctrl-val" id="asR2v">0.5 Ω</span>
+                </div>
+              </div>
+              <div class="ctrl">
+                <div class="ctrl-lbl">Reactanță dispersie</div>
+                <div class="ctrl-name">Xs [Ω]</div>
+                <div class="ctrl-row">
+                  <input type="range" id="asXs" min="0.5" max="20" step="0.5" value="5" oninput="rAsync()">
+                  <span class="ctrl-val" id="asXsv">5 Ω</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="metrics">
+              <div class="mc">
+                <div class="mc-lbl">n₁ sincron</div>
+                <div class="mc-val" id="asN1">0</div>
+                <div class="mc-unit">rot/min</div>
+              </div>
+              <div class="mc">
+                <div class="mc-lbl">Cuplu max Mₘ</div>
+                <div class="mc-val" id="asMm">0</div>
+                <div class="mc-unit">N·m</div>
+              </div>
+              <div class="mc">
+                <div class="mc-lbl">Alun. critică sₘ</div>
+                <div class="mc-val" id="asSm">0</div>
+                <div class="mc-unit">—</div>
+              </div>
+            </div>
+
+
+            <div class="feynman-box" id="feynman-async">
+              <div class="feynman-header">
+                <span class="feynman-icon">🧠</span>
+                <div>
+                  <div class="feynman-title">Técnica de Feynman</div>
+                  <div class="feynman-sub">Explica este conceito como se eu tivesse 10 anos. Sem fórmulas, apenas palavras.</div>
+                </div>
+              </div>
+              <textarea id="feynman-input-async" class="feynman-textarea"
+                placeholder="Escreve aqui com as tuas palavras... (mín. 30 palavras)"></textarea>
+              <div class="feynman-actions">
+                <span id="feynman-counter-async" class="feynman-counter">0 cuvinte</span>
+                <button onclick="submitFeynman('async')" class="feynman-btn">✓ Analizează cu AI</button>
+              </div>
+              <div id="feynman-feedback-async" class="feynman-feedback" style="display:none"></div>
+            </div>
+            <button class="explain-btn" onclick="askAI('async')">⚡ Explică mai mult cu AI</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════
+           MOD MPP
+      ═══════════════════════════════════════ -->
+      <div id="mod-mpp" class="panel">
+        <div class="sim-card">
+          <div class="sim-head">
+            <div>
+              <div class="sim-title">Motor Pas cu Pas (MPP)</div>
+              <div class="sim-sub">Clasificare · Pas Unghiular · Rezonanță · Accelerare în Trepte · Amortizare</div>
+            </div>
+            <span class="badge">Cap. 15–19</span>
+          </div>
+          <div class="sim-body">
+
+            <div class="etabs">
+              <button class="etab active" onclick="etab(this,'mpp-tech')">📐 Tehnic</button>
+              <button class="etab" onclick="etab(this,'mpp-kid')">🧒 Super Simplu</button>
+            </div>
+
+            <div id="mpp-tech" class="eblock show">
+              <div class="lang-section pt"><span class="lang-badge">🇵🇹 Português</span>
+                Cada impulso elétrico move o rotor exatamente um passo angular θₚ = 360°/(Nᵣ·m) — sem encoder, em malha aberta. A ressonância: frez = (1/2π)·√(p·M/Jred) — as oscilações próprias do rotor somam-se à comutação → torque cai. Solução: aceleração em degraus, nunca passando pela frez lentamente.
+              </div>
+              <div class="lang-section ro"><span class="lang-badge">🇷🇴 Română</span>
+                Pasul unghiular: <strong>θₚ = 360°/(Nᵣ·m)</strong>. Frecvența de rezonanță: <strong>frez = (1/2π)·√(p·M/Jred)</strong>. Pornire directă la f &gt; fstart → pierdere de pași. Amortizare: Metoda I (rezistență serie) sau Metoda II (circuit RC paralel).
+              </div>
+            </div>
+            <div id="mpp-kid" class="eblock kid">
+              <div class="lang-section pt"><span class="lang-badge">🇵🇹 Português simples</span>
+                ⏰ Imagina um relógio com ponteiro de segundos que "ticca": cada "tique" = um impulso elétrico = um passo exato. Não precisa de saber onde está (sem encoder). O problema: se "ticares" à frequência em que o ponteiro vibra naturalmente → ele perde-se. Solução: nunca "ticas" nessa frequência!
+              </div>
+              <div class="lang-section ro"><span class="lang-badge">🇷🇴 Română simplă</span>
+                🕰️ MPP e ca secundarul unui ceas — fiecare tic-tac = un pas exact, fără să întrebi unde ești. Dacă mergi prea repede (f &gt; frez) → sare pași. De aceea accelerăm gradual!
+              </div>
+            </div>
+
+            <div class="formula-box">
+              <span>θₚ = 360° / (Nᵣ · m) &nbsp; [grade/pas]</span>
+              <span>fᵣₑᵤ = (1 / 2π) · √(p · Mₘₐₓ / Jᵣₑd) &nbsp; [Hz]</span>
+              <span>fₛₜₐᵣₜ ≤ 1.25 · fᵣₑᵤ &nbsp; (condiție de pornire fără pierdere de pași)</span>
+              <span class="formula-meaning">Nᵣ — dinți rotor &nbsp;·&nbsp; m — nr. faze &nbsp;·&nbsp; p — perechi de poli &nbsp;·&nbsp; Mₘₐₓ — cuplu static maxim [N·m] &nbsp;·&nbsp; Jᵣₑd — inerție redusă la ax [kg·m²]</span>
+            </div>
+
+            <div class="cv-wrap"><canvas id="c-mpp" height="230"></canvas></div>
+
+            <div class="ctrl-grid">
+              <div class="ctrl">
+                <div class="ctrl-lbl">Dinți rotor Nr</div>
+                <div class="ctrl-name">Nr [—]</div>
+                <div class="ctrl-row">
+                  <input type="range" id="pNs" min="4" max="100" step="2" value="50" oninput="rMPP()">
+                  <span class="ctrl-val" id="pNsv">50 dinți</span>
+                </div>
+              </div>
+              <div class="ctrl">
+                <div class="ctrl-lbl">Nr. faze</div>
+                <div class="ctrl-name">m [—]</div>
+                <div class="ctrl-row">
+                  <input type="range" id="pm" min="2" max="5" value="2" oninput="rMPP()">
+                  <span class="ctrl-val" id="pmv">2 faze</span>
+                </div>
+              </div>
+              <div class="ctrl">
+                <div class="ctrl-lbl">Frecvență pulsuri</div>
+                <div class="ctrl-name">f [Hz]</div>
+                <div class="ctrl-row">
+                  <input type="range" id="pf" min="1" max="2000" value="200" oninput="rMPP()">
+                  <span class="ctrl-val" id="pfv">200 Hz</span>
+                </div>
+              </div>
+              <div class="ctrl">
+                <div class="ctrl-lbl">Inerție redusă</div>
+                <div class="ctrl-name">Jred [g·cm²]</div>
+                <div class="ctrl-row">
+                  <input type="range" id="pJ" min="1" max="500" value="50" oninput="rMPP()">
+                  <span class="ctrl-val" id="pJv">50 g·cm²</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="metrics">
+              <div class="mc">
+                <div class="mc-lbl">Pas θp</div>
+                <div class="mc-val" id="pTh">0</div>
+                <div class="mc-unit">grade</div>
+              </div>
+              <div class="mc">
+                <div class="mc-lbl">Viteză</div>
+                <div class="mc-val" id="pRpm">0</div>
+                <div class="mc-unit">rot/min</div>
+              </div>
+              <div class="mc">
+                <div class="mc-lbl">frez</div>
+                <div class="mc-val" id="pFrez">0</div>
+                <div class="mc-unit">Hz</div>
+              </div>
+            </div>
+
+            <div class="adv-grid">
+              <div class="adv">
+                <div class="adv-t p">✅ Avantaje MPP</div>
+                <div class="adv-i">Buclă deschisă — fără encoder</div>
+                <div class="adv-i">Precizie reproductibilă garantată</div>
+                <div class="adv-i">Cuplu de menținere în repaus</div>
+                <div class="adv-i">Control digital STEP/DIR simplu</div>
+                <div class="adv-i">Cost total redus al sistemului</div>
+              </div>
+              <div class="adv">
+                <div class="adv-t n">❌ Dezavantaje MPP</div>
+                <div class="adv-i">Pierdere pași la suprasarcină</div>
+                <div class="adv-i">Randament redus (curent constant)</div>
+                <div class="adv-i">Zgomot și vibrații la rezonanță</div>
+                <div class="adv-i">Putere specifică mică față de AC</div>
+                <div class="adv-i">Cuplu scade rapid la frecv. mari</div>
+              </div>
+            </div>
+
+
+            <div class="feynman-box" id="feynman-mpp">
+              <div class="feynman-header">
+                <span class="feynman-icon">🧠</span>
+                <div>
+                  <div class="feynman-title">Técnica de Feynman</div>
+                  <div class="feynman-sub">Explica este conceito como se eu tivesse 10 anos. Sem fórmulas, apenas palavras.</div>
+                </div>
+              </div>
+              <textarea id="feynman-input-mpp" class="feynman-textarea"
+                placeholder="Escreve aqui com as tuas palavras... (mín. 30 palavras)"></textarea>
+              <div class="feynman-actions">
+                <span id="feynman-counter-mpp" class="feynman-counter">0 cuvinte</span>
+                <button onclick="submitFeynman('mpp')" class="feynman-btn">✓ Analizează cu AI</button>
+              </div>
+              <div id="feynman-feedback-mpp" class="feynman-feedback" style="display:none"></div>
+            </div>
+            <button class="explain-btn" onclick="askAI('mpp')">⚡ Explică mai mult cu AI</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════
+           MOD SRVM
+      ═══════════════════════════════════════ -->
+      <div id="mod-srvm" class="panel">
+        <div class="sim-card">
+          <div class="sim-head">
+            <div>
+              <div class="sim-title">SRVM CC Fără Perii (BLDC)</div>
+              <div class="sim-sub">Comutație Statică · Senzori Hall · Înfășurare Trapezoidală/Sinusoidală</div>
+            </div>
+            <span class="badge">Cap. 12–14</span>
+          </div>
+          <div class="sim-body">
+
+            <div class="etabs">
+              <button class="etab active" onclick="etab(this,'srvm-tech')">📐 Tehnic</button>
+              <button class="etab" onclick="etab(this,'srvm-kid')">🧒 Super Simplu</button>
+            </div>
+
+            <div id="srvm-tech" class="eblock show">
+              <div class="lang-section pt"><span class="lang-badge">🇵🇹 Português</span>
+                O BLDC inverte a lógica do motor CC clássico: magnetos permanentes no ROTOR, bobinas no ESTATOR (fixas). A comutação é feita eletronicamente por transístores MOSFETs. 3 sensores Hall (a 120° elétrico) detetam a posição do rotor e indicam qual fase alimentar. Sem desgaste de escovas, rendimento superior.
+              </div>
+              <div class="lang-section ro"><span class="lang-badge">🇷🇴 Română</span>
+                BLDC = MCC "inversat": magneți permanenți pe rotor, înfășurări pe stator. Comutație electronică (MOSFET/IGBT) bazată pe 3 senzori Hall (la 120° electric). Comutație trapezoidală: 6 pași/perioadă electrică, 2 faze active simultan. Fără uzură, viteză mare, eficiență ridicată.
+              </div>
+            </div>
+            <div id="srvm-kid" class="eblock kid">
+              <div class="lang-section pt"><span class="lang-badge">🇵🇹 Português simples</span>
+                🎠 Imagina um carrossel com eletroímanes: o rotor são cavalos com ímanes permanentes. O estator são eletroímanes fixos à volta. Tu (o computador) acendes e apagas os eletroímanes na ordem certa → os cavalos giram! Sem escovas = sem desgaste. As drones, Tesla e PC fans — todos usam BLDC!
+              </div>
+              <div class="lang-section ro"><span class="lang-badge">🇷🇴 Română simplă</span>
+                🎪 BLDC e ca un carusel electronic — tranzistoare "comută" curentul în funcție de unde se află rotorul (detectat de senzori Hall). Motor curat, silențios, 10.000 RPM!
+              </div>
+            </div>
+
+            <div class="formula-box">
+              <span>u = Rₛ i + Lₛ (di/dt) + kₑ Ψ Ω &nbsp; [V]</span>
+              <span>M = kₘ Ψ i &nbsp; [N·m] &nbsp;&nbsp;&nbsp; E = kₑ Ψ Ω &nbsp; [V]</span>
+              <span>η = Pₘₑc / Pₐbₛ = M Ω / (U I) &nbsp; [—]</span>
+              <span class="formula-meaning">Rₛ — rezistență statorică [Ω] &nbsp;·&nbsp; Lₛ — inductanță statorică [H] &nbsp;·&nbsp; kₑ — constanta f.e.m. [V·s/rad] &nbsp;·&nbsp; Ω — viteză unghiulară [rad/s] &nbsp;·&nbsp; Ψ — flux de excitație [Wb]</span>
+            </div>
+
+            <div class="cv-wrap"><canvas id="c-srvm" height="230"></canvas></div>
+
+            <div class="ctrl-grid">
+              <div class="ctrl">
+                <div class="ctrl-lbl">Tensiune bus DC</div>
+                <div class="ctrl-name">U [V]</div>
+                <div class="ctrl-row">
+                  <input type="range" id="sU" min="12" max="96" value="48" oninput="rSRVM()">
+                  <span class="ctrl-val" id="sUv">48 V</span>
+                </div>
+              </div>
+              <div class="ctrl">
+                <div class="ctrl-lbl">Perechi de poli</div>
+                <div class="ctrl-name">p [—]</div>
+                <div class="ctrl-row">
+                  <input type="range" id="sp" min="1" max="8" value="3" oninput="rSRVM()">
+                  <span class="ctrl-val" id="spv">3 perechi</span>
+                </div>
+              </div>
+              <div class="ctrl">
+                <div class="ctrl-lbl">Const. FEM kₑ</div>
+                <div class="ctrl-name">kₑ [mV·s/rad]</div>
+                <div class="ctrl-row">
+                  <input type="range" id="ske" min="1" max="100" value="20" oninput="rSRVM()">
+                  <span class="ctrl-val" id="skev">20 mV·s/rad</span>
+                </div>
+              </div>
+              <div class="ctrl">
+                <div class="ctrl-lbl">Sarcină</div>
+                <div class="ctrl-name">tl [%]</div>
+                <div class="ctrl-row">
+                  <input type="range" id="stl" min="0" max="100" value="30" oninput="rSRVM()">
+                  <span class="ctrl-val" id="stlv">30 %</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="metrics">
+              <div class="mc">
+                <div class="mc-lbl">Viteză est.</div>
+                <div class="mc-val" id="sN">0</div>
+                <div class="mc-unit">rot/min</div>
+              </div>
+              <div class="mc">
+                <div class="mc-lbl">Comut./rot.</div>
+                <div class="mc-val" id="sC">0</div>
+                <div class="mc-unit">—</div>
+              </div>
+              <div class="mc">
+                <div class="mc-lbl">Regim</div>
+                <div class="mc-val" id="sMode" style="font-size:13px">—</div>
+                <div class="mc-unit">—</div>
+              </div>
+            </div>
+
+            <div class="adv-grid">
+              <div class="adv">
+                <div class="adv-t p">✅ Avantaje BLDC</div>
+                <div class="adv-i">Fără perii → fără uzură</div>
+                <div class="adv-i">Randament ridicat (90–95%)</div>
+                <div class="adv-i">Densitate putere mare</div>
+                <div class="adv-i">Turație max. foarte ridicată</div>
+                <div class="adv-i">Durată de viață lungă</div>
+              </div>
+              <div class="adv">
+                <div class="adv-t n">❌ Dezavantaje BLDC</div>
+                <div class="adv-i">Controller complex și costisitor</div>
+                <div class="adv-i">Necesită senzori Hall / encoder</div>
+                <div class="adv-i">Riplu de cuplu (trapez.)</div>
+                <div class="adv-i">Magneți permanenți — cost ridicat</div>
+              </div>
+            </div>
+
+
+            <div class="feynman-box" id="feynman-srvm">
+              <div class="feynman-header">
+                <span class="feynman-icon">🧠</span>
+                <div>
+                  <div class="feynman-title">Técnica de Feynman</div>
+                  <div class="feynman-sub">Explica este conceito como se eu tivesse 10 anos. Sem fórmulas, apenas palavras.</div>
+                </div>
+              </div>
+              <textarea id="feynman-input-srvm" class="feynman-textarea"
+                placeholder="Escreve aqui com as tuas palavras... (mín. 30 palavras)"></textarea>
+              <div class="feynman-actions">
+                <span id="feynman-counter-srvm" class="feynman-counter">0 cuvinte</span>
+                <button onclick="submitFeynman('srvm')" class="feynman-btn">✓ Analizează cu AI</button>
+              </div>
+              <div id="feynman-feedback-srvm" class="feynman-feedback" style="display:none"></div>
+            </div>
+            <button class="explain-btn" onclick="askAI('srvm')">⚡ Explică mai mult cu AI</button>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ═══════════════════════════════════════
+           MOD PROCEDEE
+      ═══════════════════════════════════════ -->
+      <div id="mod-procedee" class="panel">
+        <div class="sim-card">
+          <div class="sim-head">
+            <div>
+              <div class="sim-title">Procedee de Obținere a Energiei Mecanice</div>
+              <div class="sim-sub">4 Procedee · Electromagnetic · Anizotropie · Histerezis · Inductie Unipolară</div>
+            </div>
+            <span class="badge">Cap. 2</span>
+          </div>
+          <div class="sim-body">
+            <div class="etabs">
+              <button class="etab active" onclick="etab(this,'procedee-tech')">📐 Tehnic</button>
+              <button class="etab" onclick="etab(this,'procedee-kid')">🧒 Super Simplu</button>
+            </div>
+            <div id="procedee-tech" class="eblock show">
+              <div class="lang-section pt"><span class="lang-badge">🇵🇹 Português</span>
+                Existem 4 "truques" para converter energia elétrica em mecânica: (1) <strong>Eletromagnético</strong> — corrente + campo magnético → força de Laplace; cuplu M = −Ψ₀ₘ·i₁·sin θ, max. a θ=90°. (2) <strong>Anisotropia de forma</strong> — rotor ferromagnético quer minimizar a reluctância; M = −(i²/2)·L₁₁ₘ·sin(2θₘ), max. a θ=45°. (3) <strong>Histerese</strong> — material do rotor "lembra" o campo → atraso cria força. (4) <strong>Indução unipolar</strong> — rotor em forma de copo; e = −B·π·D·l·n.
+              </div>
+              <div class="lang-section ro"><span class="lang-badge">🇷🇴 Română</span>
+                Există 4 procedee: (1) <strong>Electromagnetic</strong> — M = −Ψ₀ₘ·i₁·sin θ, max. la θ = π/2. Avantaj: material magnetic bun → inductie ~1 T. (2) <strong>Anizotropia de formă</strong> — M = −(i₁²/2)·L₁₁ₘ·sin(2θₘ), max. la θₘ = 45°. (3) <strong>Histerezisul</strong> — M = −∂Wₘ/∂θ (motoare asincrone). (4) <strong>Inductie unipolară</strong> — rotor tip pahar; e = −B·π·D·l·n.
+              </div>
+            </div>
+            <div id="procedee-kid" class="eblock kid">
+              <div class="lang-section pt"><span class="lang-badge">🇵🇹 Português simples</span>
+                🔋 Imagina que queres fazer girar uma roda usando eletricidade. Há 4 "truques": (1) <strong>Eletromagnético</strong> — dois ímanes a empurrar-se. (2) <strong>Anisotropia</strong> — o ferro quer ir para onde o campo é mais fácil → roda 45°! (3) <strong>Histerese</strong> — o material "lembra-se" do campo → esse atraso cria força. (4) <strong>Unipolar</strong> — rotor copo a girar num campo fixo → corrente na superfície.
+              </div>
+              <div class="lang-section ro"><span class="lang-badge">🇷🇴 Română simplă</span>
+                🔋 4 metode de a "transforma" electricitate în mișcare. Cea mai comună: electromagnética (motoare CC). Cea mai simplă: anizotropie (fier în câmp). Cea mai liniștită: histerezis (motoare asincrone). Cea mai rară: unipolară (generator disc Faraday).
+              </div>
+            </div>
+            <div class="formula-box">
+              <span>M₁ = −Ψ₀ₘ · i₁ · sin θ &nbsp; (electromagnetic, max. la θ = π/2)</span>
+              <span>M₂ = −<sup>i₁²</sup>/<sub>2</sub> · L₁₁ₘ · sin(2θₘ) &nbsp; (anizotropie, max. la θₘ = 45°)</span>
+              <span>M₃ = −∂Wₘ/∂θ &nbsp; (histerezis) &nbsp;&nbsp; e₄ = −B · π · D · l · n &nbsp; (unipolar)</span>
+              <span class="formula-meaning">Wₘ — energie magnetică [J] &nbsp;·&nbsp; L₁₁ₘ — inductanța proprie maximă [H] &nbsp;·&nbsp; Ψ₀ₘ — amplitudinea fluxului de excitație [Wb]</span>
+            </div>
+            <table class="compare-table">
+              <thead><tr><th>Procedeu</th><th>Principiu</th><th>Formula M</th><th>Exemplu motor</th><th>Avantaj</th></tr></thead>
+              <tbody>
+                <tr><td><strong>1. Electromagnetic</strong></td><td>Forța Laplace F=iL×B</td><td>−Ψ₀ₘ·i₁·sin θ</td><td>Motor CC cu perii</td><td>Inductie mare (~1T)</td></tr>
+                <tr><td><strong>2. Anizotropie</strong></td><td>Reluctanță variabilă</td><td>−(i²/2)·L₁₁ₘ·sin(2θₘ)</td><td>Motor reluctanță, MPP</td><td>Simplu, robust</td></tr>
+                <tr><td><strong>3. Histerezis</strong></td><td>Material cu ciclu lat B-H</td><td>−∂Wₘ/∂θ</td><td>Motor asincron</td><td>Fără contact rotor-stator</td></tr>
+                <tr><td><strong>4. Unipolar</strong></td><td>Câmp uniform, rotor pahar</td><td>e=−B·π·D·l·n</td><td>Generator homopolar</td><td>TEM continuă fără colector</td></tr>
+              </tbody>
+            </table>
+
+            <div class="feynman-box" id="feynman-procedee">
+              <div class="feynman-header">
+                <span class="feynman-icon">🧠</span>
+                <div>
+                  <div class="feynman-title">Técnica de Feynman</div>
+                  <div class="feynman-sub">Explica este conceito como se eu tivesse 10 anos. Sem fórmulas, apenas palavras.</div>
+                </div>
+              </div>
+              <textarea id="feynman-input-procedee" class="feynman-textarea"
+                placeholder="Escreve aqui com as tuas palavras... (mín. 30 palavras)"></textarea>
+              <div class="feynman-actions">
+                <span id="feynman-counter-procedee" class="feynman-counter">0 cuvinte</span>
+                <button onclick="submitFeynman('procedee')" class="feynman-btn">✓ Analizează cu AI</button>
+              </div>
+              <div id="feynman-feedback-procedee" class="feynman-feedback" style="display:none"></div>
+            </div>
+            <button class="explain-btn" onclick="askAI('procedee')">⚡ Explică mai mult cu AI</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════
+           MOD MAGNETI
+      ═══════════════════════════════════════ -->
+      <div id="mod-magneti" class="panel">
+        <div class="sim-card">
+          <div class="sim-head">
+            <div>
+              <div class="sim-title">Magneți Permanenți și Reacția Indusului</div>
+              <div class="sim-sub">Magneți Ferite · Magneți AlNiCo · Reacția Indusului · Soluții</div>
+            </div>
+            <span class="badge">Cap. 6</span>
+          </div>
+          <div class="sim-body">
+            <div class="etabs">
+              <button class="etab active" onclick="etab(this,'magneti-tech')">📐 Tehnic</button>
+              <button class="etab" onclick="etab(this,'magneti-kid')">🧒 Super Simplu</button>
+            </div>
+            <div id="magneti-tech" class="eblock show">
+              <div class="lang-section pt"><span class="lang-badge">🇵🇹 Português</span>
+                <strong>Reação do induzido:</strong> O campo do estator sobrepõe-se ao campo criado pelo enrolamento rotórico → o eixo neutro desloca-se → faíscas no colector. Solução: sapatas polares OU ímanes permanentes. <br><br>
+                <strong>Ferrite:</strong> Hc↑ (difícil desmagnetizar), Br↓ (baixas rotações), μrev pequeno. Montagem SEM magnetizar. <strong>AlNiCo:</strong> Hc↓ (desmagnetiza fácil!), Br↑ (altas rotações). Montagem magnetizados — NUNCA abrir o circuito!
+              </div>
+              <div class="lang-section ro"><span class="lang-badge">🇷🇴 Română</span>
+                <strong>Reacția indusului:</strong> Suprapunerea câmpului statoric cu câmpul rotoric → axa neutră se deplasează → scântei. Soluții: tălpi polare SAU magneti permanenți. <br><br>
+                <strong>Ferite:</strong> Hc mare (rezistă demagnetizare), Br mică (turații mici), μrev mică. Montare nemagnetizați. <strong>AlNiCo:</strong> Hc mică (demagnetizare ușoară!), Br mare (turații mari). Montare magnetizați. Nu se deschide circuitul!
+              </div>
+            </div>
+            <div id="magneti-kid" class="eblock kid">
+              <div class="lang-section pt"><span class="lang-badge">🇵🇹 Português simples</span>
+                🔴 <strong>Ferrite</strong> — íman fraco mas "teimoso": difícil de desmagnetizar (Hc↑). Monta-se SEM magnetizar (como uma chave de fendas não magnetizada), depois magnetiza dentro do motor. 🔵 <strong>AlNiCo</strong> — íman forte mas "fraco de carácter": campo forte (Br↑) mas desmagnetiza se o circuito abrir (Hc↓). Monta-se JÁ magnetizado. NUNCA abrir o circuito!
+              </div>
+              <div class="lang-section ro"><span class="lang-badge">🇷🇴 Română simplă</span>
+                🔴 Ferite = magnet slab dar rezistent. 🔵 AlNiCo = magnet puternic dar fragil. Reacția indusului = două câmpuri care "se bat" → soluție: magneti permanenți care "domină" efectul.
+              </div>
+            </div>
+            <div class="formula-box">
+              <span>Curba B–H cadranul II: punct de funcționare (Hc, 0) și (0, Br)</span>
+              <span>Ferite: Hc ↑, Br ↓ &nbsp;&nbsp; AlNiCo: Hc ↓, Br ↑</span>
+              <span class="formula-meaning">Hc — câmp coercitiv [A/m] &nbsp;·&nbsp; Br — remanență [T] &nbsp;·&nbsp; μrev — permeabilitate de revenire</span>
+            </div>
+            <table class="compare-table">
+              <thead><tr><th>Proprietate</th><th>Ferite (ceramici)</th><th>AlNiCo (Fe-Ni-Al-Cu-Co)</th></tr></thead>
+              <tbody>
+                <tr><td>Câmp coercitiv Hc</td><td>Mare (150–300 kA/m) ✅</td><td>Mic (50–130 kA/m) ⚠️</td></tr>
+                <tr><td>Remanență Br</td><td>Mică (0.2–0.4 T) ⚠️</td><td>Mare (0.6–1.3 T) ✅</td></tr>
+                <tr><td>Rezistență demagn.</td><td>Bună — nu se demagn. ușor</td><td>Slabă — se demagn. la deschidere circuit!</td></tr>
+                <tr><td>Turație motor</td><td>Mică</td><td>Mare</td></tr>
+                <tr><td>Montare</td><td>Nemagnetizați (prin lipire)</td><td>Magnetizați (prin lipire)</td></tr>
+                <tr><td>Utilizare</td><td>Motoare multipolare, rotor pahar</td><td>Motoare multipolare, START/STOP automate</td></tr>
+              </tbody>
+            </table>
+
+            <div class="feynman-box" id="feynman-magneti">
+              <div class="feynman-header">
+                <span class="feynman-icon">🧠</span>
+                <div>
+                  <div class="feynman-title">Técnica de Feynman</div>
+                  <div class="feynman-sub">Explica este conceito como se eu tivesse 10 anos. Sem fórmulas, apenas palavras.</div>
+                </div>
+              </div>
+              <textarea id="feynman-input-magneti" class="feynman-textarea"
+                placeholder="Escreve aqui com as tuas palavras... (mín. 30 palavras)"></textarea>
+              <div class="feynman-actions">
+                <span id="feynman-counter-magneti" class="feynman-counter">0 cuvinte</span>
+                <button onclick="submitFeynman('magneti')" class="feynman-btn">✓ Analizează cu AI</button>
+              </div>
+              <div id="feynman-feedback-magneti" class="feynman-feedback" style="display:none"></div>
+            </div>
+            <button class="explain-btn" onclick="askAI('magneti')">⚡ Explică mai mult cu AI</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════
+           MOD MCC SERIE
+      ═══════════════════════════════════════ -->
+      <div id="mod-mcc-serie" class="panel">
+        <div class="sim-card">
+          <div class="sim-head">
+            <div>
+              <div class="sim-title">Motor CC cu Excitație în Serie</div>
+              <div class="sim-sub">Caracteristică Hiperbolică · Saturare Câmp · NICIODATĂ în gol!</div>
+            </div>
+            <span class="badge">Cap. 8</span>
+          </div>
+          <div class="sim-body">
+            <div class="etabs">
+              <button class="etab active" onclick="etab(this,'mccs-tech')">📐 Tehnic</button>
+              <button class="etab" onclick="etab(this,'mccs-kid')">🧒 Super Simplu</button>
+            </div>
+            <div id="mccs-tech" class="eblock show">
+              <div class="lang-section pt"><span class="lang-badge">🇵🇹 Português</span>
+                No motor série, a bobina de campo Rₑ está em <strong>SÉRIE</strong> com a armadura → I = Iₐ = Iₑ (mesmo corrente!). O fluxo Ψ depende de I através da curva de magnetização → <strong>Ψ ∝ I</strong> (até saturação). Portanto M ∝ I² (arranque enorme!). <strong>Perigo em vazio</strong>: sem carga → I→0 → Ψ→0 → n→∞ (motor destrói-se!). Característica mecânica: hipérbole (n cai muito com a carga).
+              </div>
+              <div class="lang-section ro"><span class="lang-badge">🇷🇴 Română</span>
+                Excitația serie: Re în serie cu armătura → I = Iₐ = Iₑ. Fluxul Ψ depinde de I prin curba de magnetizare → câmpul se saturează la curenți mari. Ecuații: E = U_AB − (Rₐ+Rₑ)·I − ΔUₚ; n = E/(kₑ·Ψ). <strong>NICIODATĂ în gol!</strong> Fără sarcină → n → ∞.
+              </div>
+            </div>
+            <div id="mccs-kid" class="eblock kid">
+              <div class="lang-section pt"><span class="lang-badge">🇵🇹 Português simples</span>
+                🚛 Motor série é como um caminhão com mudanças automáticas: com muita carga → tração enorme (M ∝ I²) mas velocidade baixa. Sem carga → velocidade INFINITA → explode! Por isso usa-se em veículos de tração (elétrico, locomotiva) que SEMPRE têm carga.
+              </div>
+              <div class="lang-section ro"><span class="lang-badge">🇷🇴 Română simplă</span>
+                🚛 Motor serie = camion cu tracțiune maximă: la sarcină mare → cuplu imens. Fără sarcină → viteză infinită → se distruge! De aceea se folosește la tramvaie și locomotive care MEREU au sarcină.
+              </div>
+            </div>
+            <div class="formula-box">
+              <span>E = U<sub>AB</sub> − (R<sub>a</sub> + R<sub>e</sub>) · I − ΔU<sub>p</sub> &nbsp; [V]</span>
+              <span>n = E / (k<sub>e</sub> · Ψ) &nbsp; [rot/min] &nbsp;&nbsp; M<sub>em</sub> = k<sub>m</sub> · I · Ψ &nbsp; [N·m]</span>
+              <span>⚠️ I = I<sub>a</sub> = I<sub>e</sub> &nbsp;·&nbsp; Ψ = f(I) prin curba de magnetizare</span>
+              <span class="formula-meaning">La I mic (zona liniară): Ψ ≈ k·I → M ≈ k·I² (caracteristică moale) &nbsp;·&nbsp; La I mare: saturare → Ψ ≈ const.</span>
+            </div>
+            <div class="cv-wrap"><canvas id="c-mcc-serie" height="230"></canvas></div>
+            <div class="ctrl-grid">
+              <div class="ctrl"><div class="ctrl-lbl">Tensiune</div><div class="ctrl-name">U [V]</div>
+                <div class="ctrl-row"><input type="range" id="msU" min="50" max="500" step="5" value="220" oninput="rMCCSerie()"><span class="ctrl-val" id="msUv">220 V</span></div></div>
+              <div class="ctrl"><div class="ctrl-lbl">Curent</div><div class="ctrl-name">I [A]</div>
+                <div class="ctrl-row"><input type="range" id="msI" min="1" max="100" value="20" oninput="rMCCSerie()"><span class="ctrl-val" id="msIv">20 A</span></div></div>
+              <div class="ctrl"><div class="ctrl-lbl">Rₐ+Rₑ total</div><div class="ctrl-name">R [Ω]</div>
+                <div class="ctrl-row"><input type="range" id="msRa" min="0.1" max="5" step="0.1" value="0.5" oninput="rMCCSerie()"><span class="ctrl-val" id="msRav">0.5 Ω</span></div></div>
+              <div class="ctrl"><div class="ctrl-lbl">Const. kₑ</div><div class="ctrl-name">kₑ [V·s/rad]</div>
+                <div class="ctrl-row"><input type="range" id="msKe" min="0.5" max="3" step="0.05" value="1.2" oninput="rMCCSerie()"><span class="ctrl-val" id="msKev">1.2</span></div></div>
+            </div>
+            <div class="metrics">
+              <div class="mc"><div class="mc-lbl">Viteză n</div><div class="mc-val" id="msN">0</div><div class="mc-unit">rot/min</div></div>
+              <div class="mc"><div class="mc-lbl">f.e.m. E</div><div class="mc-val" id="msE">0</div><div class="mc-unit">V</div></div>
+              <div class="mc"><div class="mc-lbl">Flux Ψ (rel.)</div><div class="mc-val" id="msPsi">0</div><div class="mc-unit">p.u.</div></div>
+            </div>
+
+            <div class="feynman-box" id="feynman-mcc-serie">
+              <div class="feynman-header">
+                <span class="feynman-icon">🧠</span>
+                <div>
+                  <div class="feynman-title">Técnica de Feynman</div>
+                  <div class="feynman-sub">Explica este conceito como se eu tivesse 10 anos. Sem fórmulas, apenas palavras.</div>
+                </div>
+              </div>
+              <textarea id="feynman-input-mcc-serie" class="feynman-textarea"
+                placeholder="Escreve aqui com as tuas palavras... (mín. 30 palavras)"></textarea>
+              <div class="feynman-actions">
+                <span id="feynman-counter-mcc-serie" class="feynman-counter">0 cuvinte</span>
+                <button onclick="submitFeynman('mcc-serie')" class="feynman-btn">✓ Analizează cu AI</button>
+              </div>
+              <div id="feynman-feedback-mcc-serie" class="feynman-feedback" style="display:none"></div>
+            </div>
+            <button class="explain-btn" onclick="askAI('mcc-serie')">⚡ Explică mai mult cu AI</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════
+           MOD TRANZITORIU
+      ═══════════════════════════════════════ -->
+      <div id="mod-tranzitoriu" class="panel">
+        <div class="sim-card">
+          <div class="sim-head">
+            <div>
+              <div class="sim-title">Studiul Regimului Tranzitoriu MCC</div>
+              <div class="sim-sub">Pornire · Oprire · Constante de Timp τₑ și τₘ · Axa d și q</div>
+            </div>
+            <span class="badge">Cap. 11</span>
+          </div>
+          <div class="sim-body">
+            <div class="etabs">
+              <button class="etab active" onclick="etab(this,'tranz-tech')">📐 Tehnic</button>
+              <button class="etab" onclick="etab(this,'tranz-kid')">🧒 Super Simplu</button>
+            </div>
+            <div id="tranz-tech" class="eblock show">
+              <div class="lang-section pt"><span class="lang-badge">🇵🇹 Português</span>
+                Os regimes transitórios são as fases de <strong>arranque e paragem</strong>, importantes pela inércia J e os momentos resistivos. O motor CC com 2 enrolamentos rotóricos (a, b) a 90° elétrico: eixo d (polo estático) e eixo q (enrolamento de excitação). Equações: u = Rₛ·i + Lₛd·(di/dt) + kₑ·ψ·Ω. Constante mecânica: τₘ = Rₐ·Jₘ/k². Constante elétrica: τₑ = Lₐ/Rₐ. Tempo de estabilização ≈ 4τₘ.
+              </div>
+              <div class="lang-section ro"><span class="lang-badge">🇷🇴 Română</span>
+                Regimurile tranzitorii = fazele de pornire și oprire. Motor CC cu 2 infasurari rotorice a, b la 90° electrice. Pol statoric = axa d; infasurare excitație = axa q. Ecuații: u = Rₛ·i + Lsd·(di/dt) + kₑ·ψ·Ω; uₑ = Rₑ·iₑ + w·(dψ/dt) + Lₑₘ·(diₑ/dt); kₑ·ψ·i = M_rez + J·(dΩ/dt). Constante: τₘ = Rₐ·Jₘ/k²; τₑ = Lₐ/Rₐ.
+              </div>
+            </div>
+            <div id="tranz-kid" class="eblock kid">
+              <div class="lang-section pt"><span class="lang-badge">🇵🇹 Português simples</span>
+                🚗 Imagina um carro numa estrada: <strong>Arranque</strong> — carregar no acelerador do zero. O motor precisa de tempo para atingir a velocidade (inércia J). <strong>Travagem</strong> — tirar o pé. O carro não para imediatamente. τₘ é o "tempo de reação" do motor — J maior = mais demora. τₑ é a rapidez do circuito elétrico — normalmente muito mais rápido que τₘ.
+              </div>
+              <div class="lang-section ro"><span class="lang-badge">🇷🇴 Română simplă</span>
+                🚗 Motor = mașina pe drum. Pornire = accelerare de la 0 (inerția J). Oprire = frânare (inerția menține rotația). τₘ = "cât de greoi" e motorul mecanic. τₑ = rapiditatea circuitului electric (de obicei mult mai mic decât τₘ).
+              </div>
+            </div>
+            <div class="formula-box">
+              <span>u = R<sub>s</sub> · i + L<sub>sd</sub> · di/dt + k<sub>e</sub> · ψ · Ω &nbsp; [V]</span>
+              <span>k<sub>e</sub> · ψ · i = M<sub>rez</sub> + J · dΩ/dt &nbsp; [N·m]</span>
+              <span>τ<sub>e</sub> = L<sub>a</sub> / R<sub>a</sub> &nbsp; [s] &nbsp;&nbsp;&nbsp; τ<sub>m</sub> = R<sub>a</sub> · J<sub>m</sub> / k² &nbsp; [s]</span>
+              <span class="formula-meaning">τₑ — constanta de timp electrică &nbsp;·&nbsp; τₘ — constanta de timp mecanică &nbsp;·&nbsp; T<sub>stabilizare</sub> ≈ 4·τₘ</span>
+            </div>
+            <div class="block-diagram">
+              <div class="bd-block">U(s)</div>
+              <div class="bd-arrow">→</div>
+              <div class="bd-sum">Σ</div>
+              <div class="bd-arrow">→</div>
+              <div class="bd-block">1/(Rₐ+sLₐ)<br><small>Circuit elec.</small></div>
+              <div class="bd-arrow">→</div>
+              <div class="bd-block">k<br><small>Transductor</small></div>
+              <div class="bd-arrow">→</div>
+              <div class="bd-sum">Σ</div>
+              <div class="bd-arrow">→</div>
+              <div class="bd-block">1/(sJₘ)<br><small>Mecanic</small></div>
+              <div class="bd-arrow">→</div>
+              <div class="bd-block">Ω(s)</div>
+            </div>
+            <div class="metrics">
+              <div class="mc"><div class="mc-lbl">τₑ (elec.)</div><div class="mc-val" id="trTe">—</div><div class="mc-unit">ms</div></div>
+              <div class="mc"><div class="mc-lbl">τₘ (mec.)</div><div class="mc-val" id="trTm">—</div><div class="mc-unit">ms</div></div>
+              <div class="mc"><div class="mc-lbl">T stabiliz.</div><div class="mc-val" id="trTs">—</div><div class="mc-unit">ms</div></div>
+            </div>
+
+            <div class="feynman-box" id="feynman-tranzitoriu">
+              <div class="feynman-header">
+                <span class="feynman-icon">🧠</span>
+                <div>
+                  <div class="feynman-title">Técnica de Feynman</div>
+                  <div class="feynman-sub">Explica este conceito como se eu tivesse 10 anos. Sem fórmulas, apenas palavras.</div>
+                </div>
+              </div>
+              <textarea id="feynman-input-tranzitoriu" class="feynman-textarea"
+                placeholder="Escreve aqui com as tuas palavras... (mín. 30 palavras)"></textarea>
+              <div class="feynman-actions">
+                <span id="feynman-counter-tranzitoriu" class="feynman-counter">0 cuvinte</span>
+                <button onclick="submitFeynman('tranzitoriu')" class="feynman-btn">✓ Analizează cu AI</button>
+              </div>
+              <div id="feynman-feedback-tranzitoriu" class="feynman-feedback" style="display:none"></div>
+            </div>
+            <button class="explain-btn" onclick="askAI('tranzitoriu')">⚡ Explică mai mult cu AI</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════
+           MOD ECUAȚII
+      ═══════════════════════════════════════ -->
+      <div id="mod-eq" class="panel">
+        <div class="sim-card">
+          <div class="sim-head">
+            <div>
+              <div class="sim-title">Ecuații Fundamentale</div>
+              <div class="sim-sub">Referință rapidă pentru examen · Click pe ecuație pentru explicație AI</div>
+            </div>
+            <span class="badge">Referință</span>
+          </div>
+          <div class="sim-body">
+
+            <div class="eq-section">
+              <div class="eq-sec-title">Cap. 1 — Legi Fundamentale ale Electromagnetismului</div>
+              <div class="eq-grid">
+                <div class="eq-card" onclick="askQuestion('Explica-me a lei de Gauss magnética e o que significa fisicamente.')">
+                  <div class="eq-name">Legea Gauss — câmp magnetic</div>
+                  <div class="eq-formula">&#x222E; <b>B</b> · d<b>A</b> = 0</div>
+                  <div class="eq-desc">Fluxul total al câmpului <b>B</b> printr-o suprafață închisă este zero — nu există monopoli magnetici; liniile de câmp sunt întotdeauna bucle închise.</div>
+                </div>
+                <div class="eq-card" onclick="askQuestion('Explica-me a lei de Faraday e=-N·dΨ/dt com exemplu practic la motor.')">
+                  <div class="eq-name">Legea Faraday — inducție electromagnetică</div>
+                  <div class="eq-formula">e = &minus;N · dΨ/dt = &minus;dΛ/dt &nbsp; [V]</div>
+                  <div class="eq-desc">O variație a fluxului magnetic Ψ printr-o bobină de N spire induce o t.e.m. proporțională cu viteza de variație. Semnul „−" exprimă legea lui Lenz.</div>
+                  <div class="eq-symbols">Λ = N · Ψ — flux înlănțuit [Wb-spire]</div>
+                </div>
+                <div class="eq-card" onclick="askQuestion('Explica-me a força de Laplace F=iL×B e a regra da mão dreapta.')">
+                  <div class="eq-name">Forța Laplace — conductor în câmp</div>
+                  <div class="eq-formula">d<b>F</b> = i (d<b>L</b> × <b>B</b>) &nbsp; ⟹ &nbsp; F = i L B sin θ &nbsp; [N]</div>
+                  <div class="eq-desc">Forța exercitată pe un conductor de lungime L parcurs de curentul i în câmpul <b>B</b>. Maximă la θ = 90°, nulă la θ = 0°.</div>
+                  <div class="eq-symbols">θ — unghiul dintre direcția curentului și <b>B</b></div>
+                </div>
+                <div class="eq-card" onclick="askQuestion('Explica-me o fluxo Ψ=B·S·cosθ e quando é máximo sau zero.')">
+                  <div class="eq-name">Flux magnetic</div>
+                  <div class="eq-formula">Ψ = &#x222B;&#x222B; <b>B</b> · d<b>A</b> = B S cos θ &nbsp; [Wb]</div>
+                  <div class="eq-desc">Fluxul este maxim când <b>B</b> ⊥ suprafaței (θ = 0°) și zero când <b>B</b> ∥ suprafaței (θ = 90°).</div>
+                  <div class="eq-symbols">B [T] &nbsp;·&nbsp; S [m²] &nbsp;·&nbsp; θ — unghi față de normala la suprafață</div>
+                </div>
+                <div class="eq-card" onclick="askQuestion('Explica-me o circuito magnético Φ=NI/Rm, analogia com circuito elétrico.')">
+                  <div class="eq-name">Legea Hopkinson — circuit magnetic</div>
+                  <div class="eq-formula">Φ = &#x2131; / &#x211C;<sub>m</sub> = N I / &#x211C;<sub>m</sub> &nbsp; [Wb]</div>
+                  <div class="eq-desc">Analogie cu legea Ohm: fluxul = forța magnetomotoare ℱ = NI împărțit la reluctanța magnetică ℛ<sub>m</sub>.</div>
+                  <div class="eq-symbols">&#x211C;<sub>m</sub> = l / (μ A) [A/Wb] &nbsp;·&nbsp; μ = μ₀ μᵣ</div>
+                </div>
+                <div class="eq-card" onclick="askQuestion('Explica-me B=μ₀μᵣH, permeabilitatea și curba de histerezis.')">
+                  <div class="eq-name">Relația constituivă B–H</div>
+                  <div class="eq-formula"><b>B</b> = μ₀ μᵣ <b>H</b> &nbsp; [T]</div>
+                  <div class="eq-desc">Inducția <b>B</b> depinde de intensitatea câmpului <b>H</b> și de permeabilitatea relativă μᵣ a materialului. La materiale feromagnetice curba B–H este neliniară (histerezis).</div>
+                  <div class="eq-symbols">μ₀ = 4π × 10⁻⁷ H/m &nbsp;·&nbsp; μᵣ ≈ 1000–10 000 (fier)</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="eq-section">
+              <div class="eq-sec-title">Cap. 7–8 — Motor de Curent Continuu (MCC)</div>
+              <div class="eq-grid">
+                <div class="eq-card" onclick="askQuestion('Explica-me ecuatiile fundamentale ale MCC derivatie: U=E+RaIa, E=keΨn, M=kmΨIa.')">
+                  <div class="eq-name">Ecuații MCC derivație (șunt)</div>
+                  <div class="eq-formula">U = E + Rₐ Iₐ &nbsp; [V] &nbsp;&nbsp; I = Iₐ + Iₑ &nbsp; [A]</div>
+                  <div class="eq-desc">Tensiunea de alimentare balansează f.e.m. indusă și căderea de tensiune rezistivă pe armătură.</div>
+                  <div class="eq-symbols">E = kₑ Ψ n [V] &nbsp;·&nbsp; M = kₘ Ψ Iₐ [N·m] &nbsp;·&nbsp; kₑ = p N<sub>a</sub>/(60 a)</div>
+                </div>
+                <div class="eq-card" onclick="askQuestion('Explica-me caracteristica mecanica n=f(Ia) a MCC derivatie si de ce este rigida.')">
+                  <div class="eq-name">Caracteristica mecanică — MCC derivație</div>
+                  <div class="eq-formula">n = (U − Rₐ Iₐ) / (kₑ Ψ) &nbsp; [rot/min]</div>
+                  <div class="eq-desc">Turația scade liniar cu curentul de armătură. Panta −Rₐ/(kₑΨ)² este mică → caracteristică <em>rigidă</em>.</div>
+                  <div class="eq-symbols">n₀ = U / (kₑ Ψ) — turație la gol (Iₐ = 0)</div>
+                </div>
+                <div class="eq-card" onclick="askQuestion('Explica-me functia de transfer G(s) a MCC, parametrii wn si xi si stabilitatea.')">
+                  <div class="eq-name">Funcția de transfer G(s) — MCC</div>
+                  <div class="eq-formula">G(s) = Ω(s)/U(s) = k / (Lₐ Jₘ s² + Rₐ Jₘ s + k²)</div>
+                  <div class="eq-desc">Sistem liniar de ordinul 2. Polii s₁,₂ determină regimul tranzitoriu și stabilitatea.</div>
+                  <div class="eq-symbols">ωₙ = √(k²/LₐJₘ) &nbsp;·&nbsp; ξ = (Rₐ/2)√(Jₘ/k²Lₐ) &nbsp;·&nbsp; s₁,₂ = −ξωₙ ± ωₙ√(ξ²−1)</div>
+                </div>
+                <div class="eq-card" onclick="askQuestion('Explica-me constantele de timp electrica te=La/Ra si mecanica tm=RaJm/k2 ale MCC.')">
+                  <div class="eq-name">Constante de timp — MCC</div>
+                  <div class="eq-formula">τₑ = Lₐ / Rₐ &nbsp; [s] &nbsp;&nbsp;&nbsp; τₘ = Rₐ Jₘ / k² &nbsp; [s]</div>
+                  <div class="eq-desc">τₑ — constanta de timp electrică (circuit armătură); τₘ — constanta de timp mecanică. Răspunsul tranzitoriu depinde de raportul τₘ/τₑ.</div>
+                  <div class="eq-symbols">Timp de stabilire ≈ 4 τₘ (ξ ≈ 1) &nbsp;·&nbsp; Suprareglaj: σ = e^(−πξ/√(1−ξ²))</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="eq-section">
+              <div class="eq-sec-title">Motor Asincron Trifazat — Câmp Rotitor &amp; Cuplu</div>
+              <div class="eq-grid">
+                <div class="eq-card" onclick="askQuestion('Explica-me alunecarea s si formula Kloss M=2Mm/(s/sm+sm/s) pentru motorul asincron.')">
+                  <div class="eq-name">Alunecarea &amp; formula Kloss</div>
+                  <div class="eq-formula">s = (n₁ − n₂)/n₁ &nbsp; [—] &nbsp;&nbsp; M = 2Mₘ / (s/sₘ + sₘ/s)</div>
+                  <div class="eq-desc">Formula Kloss aproximează caracteristica M = f(s) cu eroare &lt; 5% în zona stabilă. Maximul Mₘ apare la alunecarea critică sₘ.</div>
+                  <div class="eq-symbols">Mₘ = 3p U₁²/(2ω₁Xₛ) &nbsp;·&nbsp; sₘ = R₂/Xₛ &nbsp;·&nbsp; n₁ = 60f₁/p</div>
+                </div>
+                <div class="eq-card" onclick="askQuestion('Explica-me bilantul de puteri al motorului asincron si randamentul.')">
+                  <div class="eq-name">Bilanț de puteri — motor asincron</div>
+                  <div class="eq-formula">P<sub>mec</sub> = P<sub>em</sub> (1 − s) &nbsp; [W]</div>
+                  <div class="eq-desc">Puterea mecanică la ax este puterea electromagnetică redusă cu pierderile în rotor (propor­ționale cu alunecarea s).</div>
+                  <div class="eq-symbols">P<sub>Cu2</sub> = s · P<sub>em</sub> &nbsp;·&nbsp; η = P<sub>mec</sub>/P<sub>abs</sub> &nbsp;·&nbsp; P<sub>abs</sub> = √3 U<sub>L</sub> I<sub>L</sub> cos φ</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="eq-section">
+              <div class="eq-sec-title">Cap. 15–19 — Motor Pas cu Pas (MPP)</div>
+              <div class="eq-grid">
+                <div class="eq-card" onclick="askQuestion('Explica-me pasul unghiular thetap=360/(Nr*m) si modurile full-step, half-step, microstepping.')">
+                  <div class="eq-name">Pasul unghiular — MPP</div>
+                  <div class="eq-formula">θₚ = 360° / (Nᵣ · m) &nbsp; [°/pas]</div>
+                  <div class="eq-desc">Fiecare impuls de comandă rotește rotorul cu θₚ. Rezoluția se îmbunătățește prin half-step (θₚ/2) sau microstepping (θₚ/256).</div>
+                  <div class="eq-symbols">Nᵣ — dinți rotor &nbsp;·&nbsp; m — nr. faze &nbsp;·&nbsp; Ex: Nᵣ=50, m=4 → θₚ=1,8°</div>
+                </div>
+                <div class="eq-card" onclick="askQuestion('Explica-me frecventa de rezonanta a MPP si de ce trebuie evitata.')">
+                  <div class="eq-name">Frecvența de rezonanță — MPP</div>
+                  <div class="eq-formula">f<sub>rez</sub> = (1/2π) · √(p · M<sub>max</sub> / J<sub>red</sub>) &nbsp; [Hz]</div>
+                  <div class="eq-desc">La f = f<sub>rez</sub> apare instabilitate și pierdere de pași. Condiție de pornire sigură: f<sub>start</sub> ≤ 1,25 · f<sub>rez</sub>.</div>
+                  <div class="eq-symbols">p — perechi poli &nbsp;·&nbsp; M<sub>max</sub> [N·m] &nbsp;·&nbsp; J<sub>red</sub> [kg·m²]</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="eq-section">
+              <div class="eq-sec-title">Cap. 12–14 — SRVM / BLDC (fără perii)</div>
+              <div class="eq-grid">
+                <div class="eq-card" onclick="askQuestion('Explica-me ecuatia de tensiune a BLDC u=Rsi+Ls(di/dt)+keΨΩ si fiecare termen.')">
+                  <div class="eq-name">Ecuația de tensiune — BLDC (per fază)</div>
+                  <div class="eq-formula">u = Rₛ i + Lₛ (di/dt) + e<sub>f</sub> &nbsp; [V]</div>
+                  <div class="eq-desc">Tensiunea aplicată balansează căderea rezistivă Rₛi, căderea inductivă Lₛ(di/dt) și f.e.m. de viteză e<sub>f</sub> = kₑΨΩ.</div>
+                  <div class="eq-symbols">M = kₘ Ψ i [N·m] &nbsp;·&nbsp; η = MΩ/(UI) &nbsp;·&nbsp; P<sub>mec</sub> = e<sub>f</sub> · i</div>
+                </div>
+                <div class="eq-card" onclick="askQuestion('Explica-me commutatia trapezoidala BLDC cu 6 sectoare Hall si de ce are 6 pasi per perioda electrica.')">
+                  <div class="eq-name">Comutație trapezoidală — 6 sectoare Hall</div>
+                  <div class="eq-formula">N<sub>com</sub> = 6p &nbsp; [comutații/rotație]</div>
+                  <div class="eq-desc">La fiecare 60° electric un senzor Hall schimbă starea → se comută perechea de faze activă. 2 faze conduc simultan, 1 fază este liberă.</div>
+                  <div class="eq-symbols">Sector k = ⌊θ<sub>el</sub>/(π/3)⌋ mod 6 &nbsp;·&nbsp; θ<sub>el</sub> = p · θ<sub>mec</sub></div>
+                </div>
+              </div>
+            </div>
+
+            <button class="explain-btn" onclick="askAI('eq')">⚡ Explică ecuațiile pentru examen cu AI</button>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ═══════════════════════════════════════
+           MOD PRACTICĂ
+      ═══════════════════════════════════════ -->
+      <div id="mod-pratica" class="panel">
+        <div class="sim-card">
+          <div class="sim-head">
+            <div>
+              <div class="sim-title">Zonă de Practică</div>
+              <div class="sim-sub">Flashcards · Întrebări &amp; Răspunsuri · Test Final</div>
+            </div>
+            <span class="badge">🎓 Examen</span>
+          </div>
+          <div class="sim-body">
+            <div class="practice-tabs">
+              <button class="ptab active" onclick="showPTab('flashcards',this)">🃏 Flashcards</button>
+              <button class="ptab" onclick="showPTab('qa',this)">💬 Întrebări &amp; Răspunsuri</button>
+              <button class="ptab" onclick="showPTab('test',this)">📝 Test Final</button>
+            </div>
+
+            <!-- FLASHCARDS -->
+            <div id="ptab-flashcards" class="ptab-content">
+              <div class="filter-row">
+                <label>Capitol:</label>
+                <select id="fc-chapter" onchange="loadFlashcards()">
+                  <option value="all">Toate capitolele</option>
+                  <option value="legi">Cap 1-2: Legi + Procedee</option>
+                  <option value="mcc">Cap 5-11: Motoare CC</option>
+                  <option value="mpp">Cap 15-19: Motoare Pas cu Pas</option>
+                  <option value="srvm">Cap 12-14: SRVM Fără Perii</option>
+                </select>
+              </div>
+              <div class="flashcard" id="fc-card" onclick="flipCard()">
+                <div class="fc-front" id="fc-front">
+                  <div class="fc-category" id="fc-cat">Cap. 1</div>
+                  <div class="fc-question" id="fc-q">Carregando...</div>
+                  <div class="fc-hint">👆 Clică pentru a vedea răspunsul</div>
+                </div>
+                <div class="fc-back" id="fc-back" style="display:none">
+                  <div class="fc-category" id="fc-cat-back">Cap. 1</div>
+                  <div class="fc-answer" id="fc-a">Răspuns</div>
+                  <div class="fc-formula" id="fc-f" style="display:none"></div>
+                </div>
+              </div>
+              <div class="fc-controls">
+                <button onclick="prevCard()">← Anterior</button>
+                <span id="fc-counter">1 / 20</span>
+                <button onclick="nextCard()">Următor →</button>
+              </div>
+              <div class="fc-score">
+                <button class="fc-btn wrong"   onclick="markCard(false)">✗ Nu știam</button>
+                <button class="fc-btn correct" onclick="markCard(true)">✓ Știam!</button>
+              </div>
+              <div id="fc-progress-bar" style="height:6px;background:#eef2f7;border-radius:3px;margin-top:10px">
+                <div id="fc-progress" style="height:100%;background:#26a269;border-radius:3px;width:0%;transition:width 0.3s"></div>
+              </div>
+              <div id="fc-stats" style="font-size:11px;color:#8a9ab0;margin-top:6px;text-align:center">Marca cartela după ce verifici răspunsul</div>
+            </div>
+
+            <!-- Q&A -->
+            <div id="ptab-qa" class="ptab-content" style="display:none">
+              <div class="qa-filter">
+                <select id="qa-chapter" onchange="loadQA()">
+                  <option value="all">Toate capitolele</option>
+                  <option value="legi">Legi Fundamentale</option>
+                  <option value="procedee">Procedee Energie</option>
+                  <option value="mcc">Motor CC</option>
+                  <option value="async">Motor Asincron</option>
+                  <option value="mpp">Motor Pas cu Pas</option>
+                  <option value="srvm">SRVM Fără Perii</option>
+                </select>
+                <button onclick="nextQA()" class="explain-btn" style="width:auto;padding:8px 16px">Întrebare nouă 🎲</button>
+              </div>
+              <div class="qa-card">
+                <div class="qa-category" id="qa-cat">Capitol</div>
+                <div class="qa-question" id="qa-q">Apasă "Întrebare nouă" pentru a începe</div>
+                <textarea id="qa-answer" placeholder="Scrie răspunsul tău (în română sau portugheză)..." rows="4"></textarea>
+                <button class="explain-btn" onclick="checkQA()" style="margin-top:8px">✓ Verifică răspunsul cu AI</button>
+                <div id="qa-feedback" class="qa-feedback" style="display:none"></div>
+                <div id="qa-reference" class="qa-reference" style="display:none">
+                  <div class="qa-ref-title">📖 Răspuns de referință:</div>
+                  <div id="qa-ref-text"></div>
+                  <div id="qa-ref-formula" class="qa-formula" style="display:none"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- TEST FINAL -->
+            <div id="ptab-test" class="ptab-content" style="display:none">
+              <div id="test-setup" class="test-setup">
+                <h3>🎯 Test de Examen</h3>
+                <p style="font-size:13px;color:#4a5568;margin-bottom:12px">Simulare a unui test cu 2–3 subiecte, similar cu examenul real.</p>
+                <div class="test-options">
+                  <label>Număr subiecte:</label>
+                  <select id="test-n">
+                    <option value="2">2 subiecte</option>
+                    <option value="3" selected>3 subiecte (normal)</option>
+                  </select>
+                </div>
+                <div class="test-options">
+                  <label>Timp limită:</label>
+                  <select id="test-time">
+                    <option value="0">Fără limită</option>
+                    <option value="30">30 minute</option>
+                    <option value="60" selected>60 minute</option>
+                    <option value="90">90 minute</option>
+                  </select>
+                </div>
+                <button class="explain-btn" onclick="startTest()" style="margin-top:12px">🎯 Începe Testul</button>
+              </div>
+              <div id="test-active" style="display:none">
+                <div class="test-header">
+                  <div id="test-timer" class="test-timer"></div>
+                  <div id="test-progress-text" style="font-size:12px;color:#4a5568"></div>
+                </div>
+                <div id="test-questions"></div>
+                <button class="explain-btn" onclick="submitTest()" style="margin-top:16px">📤 Submite și Corectează cu AI</button>
+              </div>
+              <div id="test-results" style="display:none"></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ═══════════════════════════════════════
+           MOD METRICS
+      ═══════════════════════════════════════ -->
+      <div id="mod-metrics" class="panel">
+        <div class="sim-card">
+          <div class="sim-head">
+            <div>
+              <div class="sim-title">Progresul Meu</div>
+              <div class="sim-sub">Spaced Repetition · Streak · Timp de Studiu · Acuratețe Q&A</div>
+            </div>
+            <span class="badge">📊 SM-2</span>
+          </div>
+          <div class="sim-body">
+            <div id="metrics-dashboard"><!-- preenchido por renderMetricsDashboard() --></div>
+            <button class="explain-btn" style="background:var(--red);margin-top:8px"
+              onclick="if(confirm('Resetar todos os dados de progresso?')){localStorage.removeItem('actionari_metrics_v1');renderMetricsDashboard()}">
+              🗑 Resetar todos os dados
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════
+           MOD GLOSAR
+      ═══════════════════════════════════════ -->
+      <div id="mod-glosar" class="panel">
+        <div class="sim-card">
+          <div class="sim-head">
+            <div>
+              <div class="sim-title">Glosar de Termeni</div>
+              <div class="sim-sub">RO ↔ PT · 40 termeni tehnici · Click pentru explicație AI</div>
+            </div>
+            <span class="badge">Dicționar</span>
+          </div>
+          <div class="sim-body">
+            <div class="glosar-search-wrap">
+              <input type="text" id="glosar-search" class="glosar-search" placeholder="🔍 Caută termen în română sau portugheză..." />
+            </div>
+            <div class="glos-grid" id="ggrid"></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /.panels-col -->
+
+    <!-- ─────────── CHAT AI (sticky) ─────────── -->
+    <aside class="ai-panel">
+      <div class="ai-head">
+        <span class="ai-icon">✦</span>
+        <div>
+          <div class="ai-title">Asistent AI</div>
+          <div class="ai-sub">Powered by Claude · Anthropic</div>
+        </div>
+        <div class="ai-status" id="ai-status">Offline</div>
+      </div>
+
+      <div class="chat-msgs" id="cmsgs">
+        <div class="msg ai">
+          <div class="msg-lbl">Asistent AI ✦</div>
+          Bună! Sunt asistentul tău pentru <strong>Acționări Mecatronice</strong>. 🎓<br><br>
+          Răspund în <strong>PT + RO</strong> cu analogii simple și formule detaliate.<br><br>
+          Selectează un modul și apasă <em>⚡ Explică mai mult cu AI</em> sau scrie orice întrebare!<br><br>
+          <span style="font-size:10px;color:var(--text3)">Introdu cheia API în câmpul din sus pentru a activa AI-ul.</span>
+        </div>
+      </div>
+
+      <div class="quick-area" id="qarea">
+        <span class="quick-label">Întrebări rapide:</span>
+      </div>
+
+      <div class="chat-inp-area">
+        <textarea class="ci" id="cin" rows="1" placeholder="Scrie o întrebare despre acționări..."></textarea>
+        <button class="sb" id="sbtn">Trimite</button>
+      </div>
+    </aside>
+
+  </div><!-- /.main-grid -->
+
+</div><!-- /.app -->
+
+<script src="js/knowledge.js"></script>
+<script src="js/glossary.js"></script>
+<script src="js/renderers/flux.js"></script>
+<script src="js/renderers/forte.js"></script>
+<script src="js/renderers/mcc.js"></script>
+<script src="js/renderers/transfer.js"></script>
+<script src="js/renderers/async.js"></script>
+<script src="js/renderers/mpp.js"></script>
+<script src="js/renderers/srvm.js"></script>
+<script src="js/ai-chat.js"></script>
+<script src="js/metrics.js"></script>
+<script src="js/tooltips.js"></script>
+<script src="js/feynman.js"></script>
+<script src="js/practice.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
